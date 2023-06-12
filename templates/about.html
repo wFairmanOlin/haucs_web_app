@@ -1,5 +1,67 @@
 {% extends 'base.html' %}
 
-{% block body %}
+{% block head %}
 
+<title>About Us</title>
+
+{% endblock %}
+
+{% block body %}
+<body class="about-body"></body>
+<section class="sub-header">
+    <nav>
+      <a href="/"><img src="{{ url_for('static', filename='hboi_logo.png')}}"></a>
+    
+      <div class="nav-links" id="navLinks">
+        <i class="bi bi-x" onclick="hideMenu()"></i>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/">About</a></li>
+          <li><a href="/">Analytics</a></li>
+        </ul>
+      </div>
+      <i class="bi bi-list" onclick="showMenu()"></i>
+    </nav>
+</setion>
+
+<section class="about">
+  <h1>About the Application</h1>
+
+  <div class="row">
+      <div class="objectives">
+          <h3>Objective</h3>
+          <p>The primary objective of this application is to provide a centralized platform that efficiently aggregates, organizes, and visualizes biomass data. By doing so, it aims to simplify the complex task of interpreting and understanding large volumes of biomass-related information. With its sleek design and powerful features, the application strives to empower users to make informed decisions and gain valuable insights from their biomass data.</p>
+      </div>
+      <div class="objectives">
+          <h3>Key Features</h3>
+          <ul>
+              <li>Data Aggregation: Easily collect data from multiple biomass sensors in different formats and consolidate it into a unified representation.</li>
+              <li>Interactive Dashboard: Customize and personalize a central dashboard to display relevant metrics and parameters for easy monitoring.</li>
+              <li>Real-time Monitoring: Track live updates from biomass sensors, including biomass levels, temperature, and humidity.</li>
+              <li>Data Visualization: Transform complex biomass data into visually appealing graphs and charts for better understanding.</li>
+              <li>Analytics and Insights: Utilize advanced algorithms to extract meaningful patterns, outliers, and predictive trends from biomass data.</li>
+              <li>User-Friendly Interface: Enjoy an intuitive and easy-to-use interface with logical navigation and contextual help.</li>
+          </ul>
+      </div>
+  </div>
+</section>
+
+
+
+  
+    <div class="key-features"></div>
+  </div>
+    
+  <!--JavaScript for Navigation Menu-->
+  <script>
+    var navLinks = document.getElementById("navLinks")
+    
+    function showMenu(){
+      navLinks.style.right="0";
+    }
+  
+    function hideMenu(){
+      navLinks.style.right="-200px";
+    }
+  </script>
 {% endblock %}
