@@ -7,39 +7,10 @@
 {% endblock %}
 
 {% block body %}
-<section class="container">
-  <nav>
-    <a href="/"><img src="{{ url_for('static', filename='hboi_logo.png')}}"></a>
-  
-    <div class="nav-links" id="navLinks">
-      <i class="bi bi-x" onclick="hideMenu()"></i>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/">About</a></li>
-        <li><a href="/">Analytics</a></li>
-      </ul>
-    </div>
-    <i class="bi bi-list" onclick="showMenu()"></i>
-  </nav>
-</setion>
-  
+
 <div class="title">
   <h1>Biomass Data<br>Visualization Platform</h1>
   <p>This application is a cutting-edge web application meticulously engineered to streamline the presentation and analysis of biomass data collected from various biomass sensors. Whether you're a scientist, researcher, or a biomass industry professional, it offers an intuitive and user-friendly interface to simplify the display of all your biomass data.</p>
 </div>
 
-<!--JavaScript for Navigation Menu-->
-<script>
-
-  var navLinks = document.getElementById("navLinks")
-  
-  function showMenu(){
-    navLinks.style.right="0";
-  }
-
-  function hideMenu(){
-    navLinks.style.right="-200px";
-  }
-
-</script>
 {% endblock %}

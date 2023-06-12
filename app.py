@@ -12,5 +12,9 @@ def home():
 def about():
     return render_template('about.html')
 
+@app.route('/analytics')
+def analytics():
+    return render_template('analytics.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
