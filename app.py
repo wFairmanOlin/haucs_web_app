@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect 
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import firebase
 
@@ -29,6 +29,11 @@ def dropdown():
 '''@app.route('/bmass/<bm2>')
 def bmass(firebase.bm2):
     return render_template('')'''
+
+@app.route('/sensor/<int:sensor_id>')
+def show_sensor(sensor_id):
+    return render_template('sensor.html', sensor_id=sensor_id)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% if sensor_id %}
+    <title>Sensor {{ sensor_id }}</title>
+{% else %}
+    <title>Invalid Sensor</title>
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+<body class="sensor-body"></body>
+{% endblock %}
