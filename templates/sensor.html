@@ -12,4 +12,11 @@
 
 {% block body %}
 <body class="sensor-body"></body>
+
+<p> {{ sensor_id|string + "_timeseries.png"}} </p>
+
+<img src="{{ url_for('static', filename=sensor_id|string + "_timeseries.png")}}">
+
+ 
+
 {% endblock %}

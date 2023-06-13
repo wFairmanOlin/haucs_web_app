@@ -16,52 +16,9 @@
 
     <select name="pond" >
         {% for j in ponds %}
-          <option name="{{ j.ponds }}" SELECTED>{{ j.ponds }}  </option>
+          <option name="{{ j }}" SELECTED>{{ j }}  </option>
         {% endfor %}
     </select>
-    <!--<div class="main">
-        <div class="dropdown_list">
-            <button class="dropdown_button"
-                onclick="show_list()">Select pond
-            </button>
-        </div>
-    </div>
-    <select name="ponds">
-        {% for pond in ponds %}
-          <option value={{pond[0]}}>{pond[1]}</option>
-        {% endfor %}
-    </select>
-
-    <script>
-        function show_list() {
-            var courses = document.getElementById("courses_id");
- 
-            if (courses.style.display == "block") {
-                courses.style.display = "none";
-            } else {
-                courses.style.display = "block";
-            }
-        }
-        window.onclick = function (event) {
-            if (!event.target.matches('.dropdown_button')) {
-                document.getElementById('courses_id')
-                    .style.display = "none";
-            }
-        }   
-    </script>
-    <div class="ponds-menu">
-
-
-        <div class="list">
-            <ul>
-                <li><a href="/bmass_1">Pond 1</a></li>
-                <li><a href="/bmass_2">Pond 2</a></li>
-                <li><a href="/bmass_3">Pond 3</a></li>
-                <li><a href="/bmass_4">Pond 4</a></li>
-                <li><a href="/bmass_5">Pond 5</a></li>
-            </ul>
-        </div>
-    </div>-->
     
 </section>
 {% endblock %}

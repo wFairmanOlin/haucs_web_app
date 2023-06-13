@@ -82,7 +82,7 @@ class bmass_sensor():
         plt.ylabel("Sensor On - Off")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig("static/"+ str(self.id) + "_timseries.png")
+        plt.savefig("static/"+ str(self.id) + "_timeseries.png")
 
 if __name__ == "__main__":
 
