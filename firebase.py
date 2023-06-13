@@ -82,13 +82,13 @@ class bmass_sensor():
         plt.ylabel("Sensor On - Off")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig(str(self.id) + "_timseries.png")
+        plt.savefig("static/"+ str(self.id) + "_timseries.png")
 
 if __name__ == "__main__":
 
-    app = login("../pc_basestation/fb_key.json")
+    app = login("fb_key.json")
     bm2 = bmass_sensor('bmass_2')
-    bm2.plot_timeseries(mv=9)
+    bm2.plot_timeseries(mv=10)
     plt.show()
     print("latest on value: ", bm2.on[-1])
     logout(app)

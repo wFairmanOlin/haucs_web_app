@@ -9,8 +9,7 @@
 
 .container{
     width: auto;
-    height: auto;
-    padding: 20px 0px  0px 20px;
+    padding: 20px 0 10px 0px;
     background-color: rgb(79, 215, 215);    
 }
 
@@ -45,7 +44,6 @@ nav img{
 }
 
 .nav-links ul li{
-    list-style: none;
     display: inline-block;
     padding: 5px 40px;
     position: relative;
@@ -126,8 +124,6 @@ nav .bi{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /*margin-left: 10%;
-    margin-right: 10%;*/
     align-items: center;
 }
 
@@ -159,12 +155,67 @@ nav .bi{
 
 /*-------- styling for analytics page --------*/
 .analytics-body{
-    background-image: url('/static/ponds_pic.png');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: contain;
+    background-image: none;
+}
+
+.pond-picture img{
+    width: auto;
+    object-position: right;
+    float: right;
     position: relative;
+    margin: 2% 7%;
+}
+
+/*-------- styling for ponds menu --------*/
+.ponds{
+    width: 60%;
+    
+    position: absolute;
+    margin: auto;
+    text-align: center;
+    margin-top: 40px;
+}
+.ponds h1{
+    font-size: 75px;
+    font-family: 'Bebas Neue';
+    letter-spacing: 8px;
+}
+
+.ponds p{
+    font-size: 25px;
+    margin: auto;
+    margin-top: 1%;
+}
+
+.ponds-menu {
+    align-items: center;
+    text-align: center;
+    margin-top: 1%;
+}
+
+.list li{
+    text-align: center;
+    font-size: 25px;
+    margin-top: 10px;
+}
+
+.list ul li a{
+    color: #2a216e;
+    text-decoration: none;
+}
+
+.list ul li::after{
+    content: '';
+    width: 0%;
+    height: 3px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+}
+
+.list ul li:hover::after {
+    width: 10%;
+    transition: 0.3s ;
 }
 
 /*-------- styling for smaller devices --------*/
