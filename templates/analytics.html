@@ -4,21 +4,34 @@
 
 <title>Analytics</title>
 
+
 {% endblock %}
 
 {% block body %}
 <body class="analytics-body"></body>
-<div class="pond-picture"><img src="{{ url_for('static', filename='ponds_pic.png')}}"></div>
 
 <section class="ponds">
     <h1>List of Ponds</h1>
-    <p>Select a pond to see the corresponding data:</p>
+    <p>Select a pond to see the corresponding data and click submit:</p>
 
     <select name="pond" >
         {% for j in ponds %}
+<<<<<<< HEAD
           <option name="{{ j }}" SELECTED>{{ j }}  </option>
         {% endfor %}
     </select>
+=======
+          <option name="{{ j }}" SELECTED>Pond {{ j }}  </option>
+        {% endfor %}
+    </select>
+    
+    <form action="/sensor/sensor_id">
+      <input type="submit" value="Submit">
+    </form>  
+>>>>>>> 5f931ac (Added index page and styles page for maps)
     
 </section>
+
+
+
 {% endblock %}

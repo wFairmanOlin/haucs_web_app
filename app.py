@@ -17,13 +17,15 @@ def about():
 def dropdown():
     num_ponds = 5
     ponds = range(1,num_ponds+1)
-    
     return render_template('analytics.html',ponds=ponds)
 
 @app.route('/sensor/<int:sensor_id>')
 def show_sensor(sensor_id):
     return render_template('sensor.html', sensor_id=sensor_id)
 
+@app.route('/index')
+def map():
+    return render_template('index.html')
 
 def init_firebase():
     """
@@ -35,7 +37,10 @@ def init_firebase():
         bmx = firebase.bmass_sensor('bmass_' + str(id))
         bmx.plot_timeseries(mv=10)
     firebase.logout(fb_app)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5f931ac (Added index page and styles page for maps)
 
 if __name__ == "__main__":
     init_firebase()

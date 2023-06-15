@@ -168,13 +168,13 @@ nav .bi{
 
 /*-------- styling for ponds menu --------*/
 .ponds{
-    width: 60%;
-    
+    width: 50%;
     position: absolute;
     margin: auto;
     text-align: center;
     margin-top: 40px;
 }
+
 .ponds h1{
     font-size: 75px;
     font-family: 'Bebas Neue';
@@ -182,41 +182,26 @@ nav .bi{
 }
 
 .ponds p{
+    width: 50%;
     font-size: 25px;
     margin: auto;
     margin-top: 1%;
 }
 
-.ponds-menu {
-    align-items: center;
+select{
+    margin-top: 2%;
+    margin-bottom: 3%;
+    width: 120px;
+    height: 30px;
+    border: 2px solid #111516;
+    font-size: 18px;
+    color: black;
     text-align: center;
-    margin-top: 1%;
+    background-color: #b6e1ef;
+    border-radius: 5px;
+
 }
 
-.list li{
-    text-align: center;
-    font-size: 25px;
-    margin-top: 10px;
-}
-
-.list ul li a{
-    color: #2a216e;
-    text-decoration: none;
-}
-
-.list ul li::after{
-    content: '';
-    width: 0%;
-    height: 3px;
-    background: #f44336;
-    display: block;
-    margin: auto;
-}
-
-.list ul li:hover::after {
-    width: 10%;
-    transition: 0.3s ;
-}
 
 /*-------- styling for smaller devices --------*/
 
