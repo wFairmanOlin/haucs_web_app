@@ -37,10 +37,6 @@ def init_firebase():
         bmx = firebase.bmass_sensor('bmass_' + str(id))
         bmx.plot_timeseries(mv=10)
     firebase.logout(fb_app)
-<<<<<<< HEAD
-
-=======
->>>>>>> 5f931ac (Added index page and styles page for maps)
 
 if __name__ == "__main__":
     init_firebase()
