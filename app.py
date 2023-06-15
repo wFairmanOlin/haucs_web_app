@@ -27,6 +27,7 @@ def show_sensor(sensor_id):
 def map():
     return render_template('index.html')
 
+
 def init_firebase():
     """
     Generate Images on Startup

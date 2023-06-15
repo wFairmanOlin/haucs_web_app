@@ -1,28 +1,31 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Tanks Map</title>
-<link rel="stylesheet" type="text/css" href="static/css/style.css" />
-<!--<script type="module/javascript" src="index.js"></script>-->
+
+    <base href=".">
+    <title>Data Layer: Dynamic Styling</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+    <script>
+        console.log("something here");
+    </script>
+    <script src="{{ url_for('static', filename='js/map_script.js') }}"></script>
+
 {% endblock %}
 
 {% block body %}
-<div class = "maps">
     <div id="map"></div>
 
-    <script>
-        function initMap() {
-            var options = {
-            zoom: 20,
-            center: { lat: 27.529306, lng: -80.351272 },};
-            var map = new google.maps.Map(document.getElementById('map'), options);
-        }
-    </script>
-   
-    <script 
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&callback=initMap">
-    defer
-    </script>
-</div>
-    
-{% endblock %}
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&callback=initMap&v=weekly"
+      defer
+    ></script>
+  {% endblock %}
