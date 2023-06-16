@@ -3,29 +3,21 @@
 {% block head %}
 
     <base href=".">
-    <title>Data Layer: Dynamic Styling</title>
+    <title>Tanks Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-    <script>
-        console.log("something here");
-    </script>
+    <link rel="stylesheet" type="text/css" href="static/css/map_style.css" />
     <script src="{{ url_for('static', filename='js/map_script.js') }}"></script>
 
 {% endblock %}
 
 {% block body %}
-    <div id="map"></div>
-
-    <!-- 
-      The `defer` attribute causes the callback to execute after the full HTML
-      document has been parsed. For non-blocking uses, avoiding race conditions,
-      and consistent behavior across browsers, consider loading using Promises.
-      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-      for more information.
-      -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&callback=initMap&v=weekly"
-      defer
-    ></script>
-  {% endblock %}
+<div id="map_container">
+  <div id="map"></div>
+</div>
+    
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&callback=initMap&v=weekly"
+  defer
+></script>
+{% endblock %}
