@@ -26,7 +26,10 @@ def show_sensor(sensor_id):
 
 @app.route('/index')
 def map():
-    return render_template('index.html')
+    with open('map.json', 'r') as file:
+        data = file.read()
+
+    return render_template('index.html', data=data)
 
 
 def init_firebase():
