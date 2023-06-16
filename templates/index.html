@@ -2,6 +2,16 @@
 
 {% block head %}
 
+    <!-- <h1>{{ data }}</h1> -->
+
+    <script> 
+      const geoFile = JSON.parse({{ data|tojson  }});
+      const test = '{"coffee":"espresso"}'
+      const testFile = JSON.parse(test)
+      // console.log(geoFile.coffee);
+      console.log(testFile.coffee);
+    </script>
+
     <base href=".">
     <title>Tanks Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
