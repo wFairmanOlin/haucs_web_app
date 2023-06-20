@@ -4,6 +4,19 @@
 
 <title>Analytics</title>
 
+  <script> 
+    const geoFile = JSON.parse({{ data|tojson }});
+    const battVolt = JSON.parse({{ battv|tojson}});
+    console.log(battVolt)
+  </script>
+
+  <base href=".">
+  <title>Tanks Map</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+  <link rel="stylesheet" type="text/css" href="static/css/map_style.css" />
+  <script src="{{ url_for('static', filename='js/map_script.js') }}"></script>
+
 
 {% endblock %}
 
@@ -12,19 +25,18 @@
 
 <section class="ponds">
     <h1>List of Ponds</h1>
-    <p>Select a pond to see the corresponding data and click submit:</p>
-
-    <select name="pond" >
-        {% for j in ponds %}
-          <option name="{{ j }}" SELECTED>Pond {{ j }}  </option>
-        {% endfor %}
-    </select>
-    
-    <form action="/sensor/sensor_id">
-      <input type="submit" value="Submit">
-    </form>  
+    <p>Click on the pond to see the corresponding data:</p>
     
 </section>
+
+<div id="map_container">
+  <div id="map"></div>
+</div>
+    
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&callback=initMap&v=weekly"
+  defer
+></script>
 
 
 

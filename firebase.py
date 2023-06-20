@@ -87,8 +87,5 @@ class bmass_sensor():
 if __name__ == "__main__":
 
     app = login("fb_key.json")
-    bm2 = bmass_sensor('bmass_2')
-    bm2.plot_timeseries(mv=10)
-    plt.show()
-    print("latest on value: ", bm2.on[-1])
+
     logout(app)

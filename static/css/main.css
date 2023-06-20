@@ -158,18 +158,10 @@ nav .bi{
     background-image: none;
 }
 
-.pond-picture img{
-    width: auto;
-    object-position: right;
-    float: right;
-    position: relative;
-    margin: 2% 7%;
-}
-
 /*-------- styling for ponds menu --------*/
 .ponds{
-    width: 50%;
-    position: absolute;
+    width: 100%;
+    position: relative;
     margin: auto;
     text-align: center;
     margin-top: 40px;
@@ -187,21 +179,6 @@ nav .bi{
     margin: auto;
     margin-top: 1%;
 }
-
-select{
-    margin-top: 2%;
-    margin-bottom: 3%;
-    width: 120px;
-    height: 30px;
-    border: 2px solid #111516;
-    font-size: 18px;
-    color: black;
-    text-align: center;
-    background-color: #b6e1ef;
-    border-radius: 5px;
-
-}
-
 
 /*-------- styling for smaller devices --------*/
 

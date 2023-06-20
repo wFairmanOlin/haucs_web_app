@@ -8,14 +8,22 @@
     <title>Invalid Sensor</title>
 {% endif %}
 
+<link rel="stylesheet" href="static/css/sensors.css">
+
 {% endblock %}
 
 {% block body %}
-<body class="sensor-body"></body>
+<body class="sensor-body">
 
-<p> {{ sensor_id|string + "_timeseries.png"}} </p>
+    <div class = "graph">
+        <h1>Differential Graph of Data Collected over the last 6 Days</h1>
+        <img src="{{ url_for('static', filename=sensor_id|string + '_timeseries.png')}}">
+    </div>
 
-<img src="{{ url_for('static', filename=sensor_id|string + '_timeseries.png')}}">
+</body>
+
+
+
 
  
 
