@@ -1,0 +1,21 @@
+/*-------- styling for analytics page --------*/
+.ponds{
+    width: 100%;
+    position: relative;
+    margin: auto;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.ponds h1{
+    font-size: 75px;
+    font-family: 'Bebas Neue';
+    letter-spacing: 8px;
+}
+
+.ponds p{
+    width: 50%;
+    font-size: 25px;
+    margin: auto;
+    margin-top: 1%;
+}

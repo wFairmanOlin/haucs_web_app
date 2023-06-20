@@ -1,0 +1,35 @@
+/*-------- home page content styling --------*/
+body{
+    background-image: url('/static/background.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: contain;
+    position: relative;
+}
+
+.title{
+    width: 100%;
+    position: absolute;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.title h1{
+    font-family: 'Bebas Neue';
+    font-size: 100px;
+    letter-spacing: 5px;
+}
+
+.title p{
+    width: 75%;
+    margin: auto;
+    margin-top: 30px;
+    font-size: 25px;
+    line-height: 40px;
+    color: rgb(37, 65, 73); 
+    text-size-adjust: auto;
+    font-weight: 600;
+}
+
+

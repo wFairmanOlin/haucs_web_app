@@ -13,7 +13,7 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/analytics',methods=['GET'])
+@app.route('/analytics')
 def map():
     with open('static/json/map_features.json', 'r') as file:
         data = file.read()
@@ -24,14 +24,8 @@ def map():
 def show_sensor(sensor_id):
     return render_template('sensor.html', sensor_id=sensor_id)
 
-# def init_firebase():
-#     """
-#     Generate Images on Startup
-#     """
-    
-
 if __name__ == "__main__":
-
+    
     fb_app = firebase.login("fb_key.json")
 
     bms = dict()
@@ -49,5 +43,4 @@ if __name__ == "__main__":
         last_battv[bms[j].id] = bms[j].battv[-1]
 
     firebase.logout(fb_app)
-    # init_firebase()
     app.run(debug=True)

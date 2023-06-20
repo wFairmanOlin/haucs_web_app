@@ -1,27 +1,29 @@
 let map;
 
-function boxStyle() {
+// Function that styles the boxes given their last voltage
+function boxStyle(pond_id,voltage) {
   var mediumBatt = 3.7;
   var lowBatt = 3.4;
+  let color = 'gray';
 
-  for (i=0; i<battVolt;i++){
-    if (battVolt[i]<lowBatt){
-      fillColor : "red"
+    if (voltage<=lowBatt){
+      color = 'red';
     }
 
-    else if(battVolt[i]>lowBatt & battVolt[i]<mediumBatt){
-      fillColor :  "orange"
+    else if(voltage>=lowBatt & voltage<mediumBatt){
+      color = 'orange';
     }
 
-    else{
-      fillColor : "green"
+    else if(voltage>=mediumBatt){
+      color = "green";
     }
+
+    return color;
   }
-}
-
+  
+// Function that initializes the map
 function initMap() {
   var center = { lat: 27.529283711906945, lng: -80.35124747779686 };
-
   var map = new google.maps.Map(document.getElementById('map'), 
   {
     zoom: 20,
@@ -29,33 +31,23 @@ function initMap() {
     mapTypeId: 'satellite'
   });
 
-  
-
   // Load GeoJSON.
   map.data.addGeoJson(geoFile);
 
-  // Color each letter gray. Change the color when the isColorful property
-  // is set to true.
-  map.data.setStyle({
-    
-    boxStyle})
+  map.data.setStyle((feature) => {
+    let pond_id = feature.getProperty('number');
+    let voltage = battVolt[pond_id]
 
-    // fillColor: "green",
-    // strokeWeight: 2
-    
-    // for (i=0;i< battVolt; i++) {
-    //   print(battVolt[i])
-    // }
+    color = boxStyle(pond_id, voltage)
+   
+    return /** @type {!google.maps.Data.StyleOptions} */ {
+      fillColor: color,
+      strokeColor: color,
+      strokeWeight: 2,
+    };
+  });
 
-    // // if (feature.getProperty("isColorful")) {
-    // //   color = feature.getProperty("color");
-    // // }
-    // // return /** @type {!google.maps.Data.StyleOptions} */ {
-    // //   fillColor: color,
-    // //   strokeColor: color,
-    // //   strokeWeight: 2,
-    // // };
-
+  //Adding listeners for user interaction
   map.data.addListener("click", (event) => {
     location.href = "/sensor"+event.feature.getProperty("number");
   });
