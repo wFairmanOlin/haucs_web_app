@@ -23,7 +23,7 @@ function boxStyle(pond_id,voltage) {
   
 // Function that initializes the map
 function initMap() {
-  var center = { lat: 27.529283711906945, lng: -80.35124747779686 };
+  var center = { lat: 27.5292996, lng: -80.3512828 };
   var map = new google.maps.Map(document.getElementById('map'), 
   {
     zoom: 20,
@@ -32,11 +32,11 @@ function initMap() {
   });
 
   // Load GeoJSON.
-  map.data.addGeoJson(geoFile);
+  map.data.addGeoJson(geoFile_bms);
 
   map.data.setStyle((feature) => {
     let pond_id = feature.getProperty('number');
-    let voltage = battVolt[pond_id]
+    let voltage = battVolt_bms[pond_id]
 
     color = boxStyle(pond_id, voltage)
    

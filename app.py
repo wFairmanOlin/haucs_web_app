@@ -13,12 +13,19 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/analytics')
+@app.route('/HAUCS')
+def haucs():
+    with open('static/json/farm_features.json', 'r') as file:
+        data = file.read()
+    
+    return render_template('HAUCS.html', data=data, battv=json.dumps(last_battv))
+
+@app.route('/biomass')
 def map():
-    with open('static/json/map_features.json', 'r') as file:
+    with open('static/json/tanks_features.json', 'r') as file:
         data = file.read()
 
-    return render_template('analytics.html', data=data,battv=json.dumps(last_battv))
+    return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
