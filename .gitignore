@@ -1,3 +1,4 @@
 /__pycache__ 
-*.json
+fb_key.json
 *_timeseries.png
+.DS_store
