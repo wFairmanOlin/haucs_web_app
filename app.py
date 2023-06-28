@@ -33,7 +33,7 @@ def show_sensor(sensor_id):
     return render_template('sensor.html', sensor_id=sensor_id)
 
 if __name__ == "__main__":
-    
+    print("starting init")
     fb_app = firebase.login("fb_key.json")
 
     bms = dict()
@@ -51,3 +51,4 @@ if __name__ == "__main__":
 
     firebase.logout(fb_app)
     app.run(debug=False)
+    print('finishing init')
