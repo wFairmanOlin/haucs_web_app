@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime
 import firebase
 import json 
+import data_generator
 
 app = Flask(__name__)
 
@@ -36,18 +37,17 @@ if __name__ == "__main__":
     fb_app = firebase.login("fb_key.json")
 
     bms = dict()
-    bms['bmass_1'] = firebase.bmass_sensor('bmass_1')
-    bms['bmass_2'] = firebase.bmass_sensor('bmass_2')
-    bms['bmass_3'] = firebase.bmass_sensor('bmass_3')
-    bms['bmass_4'] = firebase.bmass_sensor('bmass_4')
-    bms['bmass_5'] = firebase.bmass_sensor('bmass_5')
-
+    num_sensors=5
+    for i in range(1, num_sensors + 1):
+        bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
+    
     for i in bms:
         bms[i].plot_timeseries(mv=10)
 
     last_battv=dict()
     for j in bms:
         last_battv[bms[j].id] = bms[j].battv[-1]
+    
 
     firebase.logout(fb_app)
     app.run(debug=True)

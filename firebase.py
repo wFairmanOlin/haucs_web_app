@@ -9,6 +9,7 @@ import firebase_admin
 from firebase_admin import db
 from firebase_admin import credentials
 import pytz
+import data_generator
 
 def login(key_path):
     """
@@ -84,6 +85,22 @@ class bmass_sensor():
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.savefig("static/"+ str(self.id) + "_timeseries.png")
 
+class ponds_sensors():
+
+    def __init__(self,name):
+        ref = db.reference('/LH_Farm/pond_1')
+        data = ref.get()
+        self.d_dt = to_datetime(data)
+        self.do = np.array([(data[i]['do']) for i in data])
+        self.heading = np.array([(data[i]['heading']) for i in data])
+        self.init_do = np.array([(data[i]['init_do']) for i in data])
+        self.init_pressure = np.array([(data[i]['init_pressure']) for i in data])
+        self.lat = np.array([(data[i]['lat']) for i in data])
+        self.lng = np.array([(data[i]['lng']) for i in data])
+        self.pressure = np.array([(data[i]['pressure']) for i in data])
+        self.temp = np.array([(data[i]['temp']) for i in data])
+        self.id = int(name[-1])
+    
 if __name__ == "__main__":
 
     app = login("fb_key.json")
@@ -103,8 +120,5 @@ if __name__ == "__main__":
         bv = bms[i].battv[-1]
         t = bms[i].s_dt[-1]
         last_battv[id] = {'voltage':bv, 'time':t}
-
-
-    print(last_battv)
 
     logout(app)
