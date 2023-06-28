@@ -4,7 +4,23 @@ import firebase
 import json 
 import data_generator
 
+
 app = Flask(__name__)
+
+def load_data():
+    fb_app = firebase.login("fb_key.json")
+
+    bms = dict()
+    num_sensors=5
+    for i in range(1, num_sensors + 1):
+        bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
+
+    last_battv=dict()
+    for j in bms:
+        last_battv[bms[j].id] = bms[j].battv[-1]
+    firebase.logout(fb_app)
+    
+    return bms, last_battv
 
 @app.route('/')
 def home():
@@ -16,6 +32,7 @@ def about():
 
 @app.route('/HAUCS')
 def haucs():
+    bms, last_battv = load_data()
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
     
@@ -23,6 +40,7 @@ def haucs():
 
 @app.route('/biomass')
 def map():
+    bms, last_battv = load_data()
     with open('static/json/tanks_features.json', 'r') as file:
         data = file.read()
 
@@ -31,6 +49,7 @@ def map():
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
     return render_template('sensor.html', sensor_id=sensor_id)
+
 
 if __name__ == "__main__":
     print("starting init")
@@ -48,7 +67,6 @@ if __name__ == "__main__":
     for j in bms:
         last_battv[bms[j].id] = bms[j].battv[-1]
     
-
     firebase.logout(fb_app)
-    app.run(debug=False)
-    print('finishing init')
+    app.run(debug=True)
+    
