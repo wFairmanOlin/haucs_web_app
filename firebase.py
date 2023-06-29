@@ -17,9 +17,7 @@ def login(key_path):
 
     return: an app instance
     """
-    with open(key_path, 'r') as file:
-        data = file.read()
-    data = json.loads(data)
+    data = json.loads(key_path)
     # cred = credentials.Certificate(key_path)
     cred = credentials.Certificate(data)
     return firebase_admin.initialize_app(cred, {'databaseURL': 'https://haucs-monitoring-default-rtdb.firebaseio.com'})

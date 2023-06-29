@@ -6,14 +6,11 @@ import data_generator
 import os
 
 fb_key = os.getenv('fb_key')
-print("starting")
-print("starting")
-print(type(fb_key))
 
 app = Flask(__name__)
 
 def load_data():
-    fb_app = firebase.login("fb_key.json")
+    fb_app = firebase.login(fb_key)
 
     bms = dict()
     num_sensors=5
@@ -57,12 +54,9 @@ def show_sensor(sensor_id):
 
 
 if __name__ == "__main__":
-    print("starting init")
     fb_key = os.getenv('fb_key')
-    print("starting")
-    print("starting")
-    print(type(fb_key))
-    fb_app = firebase.login("fb_key.json")
+    
+    fb_app = firebase.login(fb_key)
 
     bms = dict()
     num_sensors=5
@@ -77,5 +71,5 @@ if __name__ == "__main__":
         last_battv[bms[j].id] = bms[j].battv[-1]
     
     firebase.logout(fb_app)
-    app.run(debug=True)
+    app.run(debug=False)
     
