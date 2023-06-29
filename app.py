@@ -3,7 +3,12 @@ from datetime import datetime
 import firebase
 import json 
 import data_generator
+import os
 
+fb_key = os.getenv('fb_key')
+print("starting")
+print("starting")
+print(type(fb_key))
 
 app = Flask(__name__)
 
@@ -53,6 +58,10 @@ def show_sensor(sensor_id):
 
 if __name__ == "__main__":
     print("starting init")
+    fb_key = os.getenv('fb_key')
+    print("starting")
+    print("starting")
+    print(type(fb_key))
     fb_app = firebase.login("fb_key.json")
 
     bms = dict()
