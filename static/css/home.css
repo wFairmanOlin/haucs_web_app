@@ -2,10 +2,8 @@
 body{
     background-image: url('/static/background.png');
     background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: contain;
-    position: relative;
+    background-position: center 150px;
+    background-size: auto auto;
 }
 
 .title{
@@ -32,4 +30,16 @@ body{
     font-weight: 600;
 }
 
+@media(max-width: 700px) {
+    .title h1{
+        margin: 0 2%;
+        font-size: 50px;
+        line-height: 60px;
+    }
+
+    .title p{
+        font-size: 18px;
+        line-height: 30px;
+    }
+}
 
