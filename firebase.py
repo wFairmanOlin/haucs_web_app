@@ -3,6 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 import numpy as np
 import pandas as pd
+import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
 import firebase_admin
@@ -10,14 +11,16 @@ from firebase_admin import db
 from firebase_admin import credentials
 import pytz
 import data_generator
+matplotlib.use('agg')
 
-def login(key_path):
+def login(key_dict):
     """
     Start a Firebase Instance
 
     return: an app instance
     """
-    cred = credentials.Certificate(key_path)
+    data = json.loads(key_dict)
+    cred = credentials.Certificate(data)
     return firebase_admin.initialize_app(cred, {'databaseURL': 'https://haucs-monitoring-default-rtdb.firebaseio.com'})
 
 def logout(app):

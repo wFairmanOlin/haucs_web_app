@@ -3,8 +3,43 @@ from datetime import datetime
 import firebase
 import json 
 import data_generator
+import os
+
+
+fb_key = os.getenv('fb_key')
+
+if fb_key:
+    print("running in deployment mode")
+    deployed = True
+else:
+    print("running in debug mode")
+    deployed = False
+    with open('fb_key.json', 'r') as file:
+        fb_key = file.read()
+
+def load_data():
+    fb_app = firebase.login(fb_key)
+
+    bms = dict()
+    num_sensors=5
+    for i in range(1, num_sensors + 1):
+        bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
+
+    last_battv=dict()
+    for j in bms:
+        last_battv[bms[j].id] = bms[j].battv[-1]
+    firebase.logout(fb_app)
+    
+    return bms, last_battv
+
+def generate_graphs():
+    bms = load_data()
+    for i in bms:
+        bms[i].plot_timeseries(mv=10)
+
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def home():
@@ -16,6 +51,7 @@ def about():
 
 @app.route('/HAUCS')
 def haucs():
+    bms, last_battv = load_data()
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
     
@@ -23,6 +59,12 @@ def haucs():
 
 @app.route('/biomass')
 def map():
+    # get data
+    bms, last_battv = load_data()
+    # generate_graphs
+    for i in bms:
+        bms[i].plot_timeseries(mv=10)
+
     with open('static/json/tanks_features.json', 'r') as file:
         data = file.read()
 
@@ -32,22 +74,8 @@ def map():
 def show_sensor(sensor_id):
     return render_template('sensor.html', sensor_id=sensor_id)
 
+
 if __name__ == "__main__":
+    if not deployed:
+        app.run(debug=True)
     
-    fb_app = firebase.login("fb_key.json")
-
-    bms = dict()
-    num_sensors=5
-    for i in range(1, num_sensors + 1):
-        bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
-    
-    for i in bms:
-        bms[i].plot_timeseries(mv=10)
-
-    last_battv=dict()
-    for j in bms:
-        last_battv[bms[j].id] = bms[j].battv[-1]
-    
-
-    firebase.logout(fb_app)
-    app.run(debug=True)
