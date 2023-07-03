@@ -108,20 +108,4 @@ if __name__ == "__main__":
 
     app = login("fb_key.json")
 
-    bms = dict()
-    bms['bmass_1'] = bmass_sensor('bmass_1')
-    bms['bmass_2'] = bmass_sensor('bmass_2')
-
-    for x in bms:
-        bms[x].plot_timeseries(mv=10)
-
-    print("latest on value: ", bms['bmass_1'].on[-1])
-
-    last_battv = dict()
-    for i in bms:
-        id = bms[i].id
-        bv = bms[i].battv[-1]
-        t = bms[i].s_dt[-1]
-        last_battv[id] = {'voltage':bv, 'time':t}
-
     logout(app)

@@ -1,8 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect 
 from datetime import datetime
 import firebase
-import json 
-import data_generator
+import json
 import os
 
 
@@ -72,8 +71,13 @@ def map():
 
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
-    return render_template('sensor.html', sensor_id=sensor_id)
+    bms, last_battv = load_data()
+    return render_template('tanks_analytics.html', sensor_id=sensor_id, last_battv=last_battv)
 
+@app.route('/pond'+'<int:pond_id>')
+def show_pond(pond_id):
+    bms, last_battv = load_data()
+    return render_template('haucs_analytics.html', pond_id=pond_id, last_battv = last_battv)
 
 if __name__ == "__main__":
     if not deployed:

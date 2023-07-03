@@ -32,7 +32,6 @@ function initMap() {
     mapTypeControl: false,
     fullscreenControl: false,
     streetViewControl: false
-    // mapId: 'DEMO_MAP_ID'
   });
 
   // Load GeoJSON.
@@ -56,7 +55,7 @@ function initMap() {
     [ 37.703000518448896, -89.4688201254245]
   ];
 
-  var status="off"; //will be a data point sent eventually
+  var status="on"; //will be a data point sent eventually
   var marker=[];
   var marker_icon = '';
 
@@ -94,11 +93,9 @@ function initMap() {
   // Setting up markers
   map_markers = createMarkers(status, markers, marker_icon)
 
-  }
-
   //Adding listeners for user interaction
   map.data.addListener("click", (event) => {
-    location.href = "/sensor"+event.feature.getProperty("number");
+    location.href = "/pond"+event.feature.getProperty("number");
   });
 
   map.data.addListener("mouseover", (event) => {
@@ -110,5 +107,6 @@ function initMap() {
     map.data.revertStyle();
   });
 
+  }
 
 window.initMap = initMap;

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% if pond_id %}
+    <title>Pond {{ pond_id }}</title>
+{% else %}
+    <title>Invalid Pond</title>
+{% endif %}
+
+<link rel="stylesheet" href="static/css/sensors.css">
+
+{% endblock %}
+
+{% block body %}
+
+<body class="sensor-body">
+
+    <div class="pond_number">
+        <h1>Pond {{pond_id}} Specifics</h1>
+    </div>
+
+    <div class="data_summary">
+        <h1>Data Summary</h1>
+        <li>Sensor Status: </li>
+        <li>Battery Voltage: {{last_battv[sensor_id]}} V</li>
+        <li>Dissolved Oxygen: </li>
+        <li>Pressure: </li>
+        <li>Temperature: </li>
+        <li>Last time of data collection: </li>
+      </div>
+
+    <div class = "graph">
+        <h1>Differential Graph of Data Collected <br> over the last 7 Days</h1>
+        <img src="{{ url_for('static', filename=pond_id|string + '_timeseries.png')}}">
+    </div>
+
+</body>
+
+{% endblock %}

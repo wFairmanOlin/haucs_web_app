@@ -28,7 +28,10 @@ function initMap() {
   {
     zoom: 20,
     center: center,
-    mapTypeId: 'satellite'
+    mapTypeId: 'satellite',
+    mapTypeControl: false,
+    fullscreenControl: false,
+    streetViewControl: false
   });
 
   // Load GeoJSON.

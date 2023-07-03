@@ -13,10 +13,22 @@
 {% endblock %}
 
 {% block body %}
+
 <body class="sensor-body">
 
+    <div class="tank_number">
+        <h1>Tank {{sensor_id}} Specifics</h1>
+    </div>
+
+    <div class="data_summary">
+        <h1>Data Summary</h1>
+        <li>Sensor Status: </li>
+        <li>Battery Voltage: {{last_battv[sensor_id]}} V</li>
+        <li>Last time of data collection: </li>
+      </div>
+
     <div class = "graph">
-        <h1>Differential Graph of Data Collected over the last 6 Days</h1>
+        <h1>Differential Graph of Data Collected <br> over the last 7 Days</h1>
         <img src="{{ url_for('static', filename=sensor_id|string + '_timeseries.png')}}">
     </div>
 
