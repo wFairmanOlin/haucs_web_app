@@ -37,6 +37,7 @@ function initMap() {
   // Load GeoJSON.
   map.data.addGeoJson(geoFile_HAUCS);
 
+  // Call style function
   map.data.setStyle((feature) => {
     let pond_id = feature.getProperty('number');
     let voltage = battVolt_HAUCS[pond_id]
@@ -50,19 +51,22 @@ function initMap() {
     };
   });
 
-  const markers = [
+  // Static aerators locations
+  var marker_locations = [
     [ 37.7037823, -89.4648105],
     [ 37.703000518448896, -89.4688201254245]
   ];
 
+  var infowindow = new google.maps.InfoWindow();
+
+  // Initialize status and icon variables
   var status="on"; //will be a data point sent eventually
-  var marker=[];
   var marker_icon = '';
 
-  function createMarkers(status, markers, marker_icon){
+  // Function that creates custom markers given locations
+  function createMarkers(status, marker_locations, marker_icon){
     
-    for(let i=0; i<markers.length; i++){
-      const currMarker = markers[i];
+    for(let i=0; i<marker_locations.length; i++){
       if (status=='on'){
         marker_icon = "static/aerator_on.svg";
       }
@@ -71,29 +75,27 @@ function initMap() {
       }
       
       marker = new google.maps.Marker({
-        position: {lat: currMarker[0], lng: currMarker[1]},
-        map,
+        position: new google.maps.LatLng(marker_locations[i][0], marker_locations[i][1]),
+        map: map,
         icon: {
           url: marker_icon,
           scaledSize: new google.maps.Size(25,25)
         }
-      }) 
-
-      // const infoWindow = new google.maps.InfoWindow({
-      //   content: 'Status: '
-      // });
-        
-      // marker.addListener("click",() => {
-      //   infoWindow.setContent('Status: ')
-      //   infoWindow.open(map,marker);
-      // });
+      });
+      
+      google.maps.event.addListener(marker, 'click', (function(marker, i){
+        return function() {
+          infowindow.setContent("Status: "+ status)
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
     }
   }
 
-  // Setting up markers
-  map_markers = createMarkers(status, markers, marker_icon)
+  // Call markers function
+  map_markers = createMarkers(status, marker_locations, marker_icon)
 
-  //Adding listeners for user interaction
+  // Add listeners for user interaction
   map.data.addListener("click", (event) => {
     location.href = "/pond"+event.feature.getProperty("number");
   });

@@ -24,12 +24,27 @@ def load_data():
     for i in range(1, num_sensors + 1):
         bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
 
+    ponds = dict()
+    num_ponds = 70
+    for i in range (1, num_ponds+1):
+        ponds['pond_'+str(i)] = firebase.ponds_sensors('pond_'+str(i))
+
     last_battv=dict()
     for j in bms:
         last_battv[bms[j].id] = bms[j].battv[-1]
+
+    last_data_bms = dict()
+    for k in bms:
+        last_data_bms[bms[k].id] = bms[k].d_dt[-1]
+    
+    last_data_haucs = dict()
+    for k in ponds:
+        last_data_haucs[ponds[k].id] = ponds[k].d_dt[-1] 
+
+
     firebase.logout(fb_app)
     
-    return bms, last_battv
+    return bms, last_battv, last_data_bms, last_data_haucs
 
 def generate_graphs():
     bms = load_data()
@@ -50,7 +65,7 @@ def about():
 
 @app.route('/HAUCS')
 def haucs():
-    bms, last_battv = load_data()
+    bms, last_battv, last_data_bms, last_data_haucs = load_data()
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
     
@@ -59,7 +74,7 @@ def haucs():
 @app.route('/biomass')
 def map():
     # get data
-    bms, last_battv = load_data()
+    bms, last_battv, last_data_bms, last_data_haucs = load_data()
     # generate_graphs
     for i in bms:
         bms[i].plot_timeseries(mv=10)
@@ -71,13 +86,13 @@ def map():
 
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
-    bms, last_battv = load_data()
-    return render_template('tanks_analytics.html', sensor_id=sensor_id, last_battv=last_battv)
+    bms, last_battv, last_data_bms, last_data_haucs = load_data()
+    return render_template('tanks_analytics.html', sensor_id=sensor_id, last_battv=last_battv, last_collection = last_data_bms)
 
 @app.route('/pond'+'<int:pond_id>')
 def show_pond(pond_id):
-    bms, last_battv = load_data()
-    return render_template('haucs_analytics.html', pond_id=pond_id, last_battv = last_battv)
+    bms, last_battv, last_data_bms, last_data_haucs = load_data()
+    return render_template('haucs_analytics.html', pond_id=pond_id, last_battv = last_battv, last_collection = last_data_haucs)
 
 if __name__ == "__main__":
     if not deployed:
