@@ -44,7 +44,7 @@ def load_data():
 
     firebase.logout(fb_app)
     
-    return bms, last_battv, last_data_bms, last_data_haucs
+    return bms, ponds, last_battv, last_data_bms, last_data_haucs
 
 def generate_graphs():
     bms = load_data()
@@ -65,7 +65,12 @@ def about():
 
 @app.route('/HAUCS')
 def haucs():
-    bms, last_battv, last_data_bms, last_data_haucs = load_data()
+    # get data
+    bms, ponds, last_battv, last_data_bms, last_data_haucs = load_data()
+    # generate_graphs
+    for i in ponds:
+        ponds[i].plot_do(mv=10)
+
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
     

@@ -93,16 +93,47 @@ class ponds_sensors():
     def __init__(self,name):
         ref = db.reference('/LH_Farm/pond_1')
         data = ref.get()
+        final_pressure=[]
+        final_do = []
+        final_temp = []
+
+        for i in data:
+            pressure = data[i]['pressure']
+            do = data[i]['do']
+            temp = data[i]['temp']
+            high_pressure = max(pressure)
+            index_hp = pressure.index(high_pressure)
+            final_pressure.append(pressure[index_hp])
+            final_do.append(do[index_hp])
+            final_temp.append(temp[index_hp])
+
         self.d_dt = to_datetime(data)
-        self.do = np.array([(data[i]['do']) for i in data])
         self.heading = np.array([(data[i]['heading']) for i in data])
         self.init_do = np.array([(data[i]['init_do']) for i in data])
         self.init_pressure = np.array([(data[i]['init_pressure']) for i in data])
         self.lat = np.array([(data[i]['lat']) for i in data])
         self.lng = np.array([(data[i]['lng']) for i in data])
-        self.pressure = np.array([(data[i]['pressure']) for i in data])
-        self.temp = np.array([(data[i]['temp']) for i in data])
+        self.pressure = final_pressure
+        self.do = final_do
+        self.temp = final_temp
         self.id = int(name[-1])
+
+    def plot_do(self, mv=3):
+        # Set date format for x-axis labels
+        date_fmt = '%m-%d %H:%M'
+        # Use DateFormatter to set the data to the correct format.
+        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
+        lower = self.d_dt[-1] - timedelta(hours=24)
+
+        window = self.d_dt > lower
+
+        plt.figure()
+        plt.plot(self.d_dt[window], moving_average(self.do[window] - self.init_do[window], mv))
+        plt.title("Sensor " + str(self.id) + " Diff Daily")
+        plt.ylabel("DO Values (%)")
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/"+ str(self.id) + "DO_values.png")
     
 if __name__ == "__main__":
 
