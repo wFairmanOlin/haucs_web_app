@@ -4,6 +4,8 @@ import firebase
 import json
 import os
 
+#define number of bmass sensors
+bmass_num = 5
 
 fb_key = os.getenv('fb_key')
 
@@ -16,41 +18,20 @@ else:
     with open('fb_key.json', 'r') as file:
         fb_key = file.read()
 
-def load_data():
-    fb_app = firebase.login(fb_key)
+#login to firebase
+fb_app = firebase.login(fb_key)
 
-    bms = dict()
-    num_sensors=5
-    for i in range(1, num_sensors + 1):
-        bms['bmass_'+str(i)] = firebase.bmass_sensor('bmass_'+str(i))
 
-    ponds = dict()
-    num_ponds = 70
-    for i in range (1, num_ponds+1):
-        ponds['pond_'+str(i)] = firebase.ponds_sensors('pond_'+str(i))
-
+def get_all_battv():
+    """
+    Get the latest battery voltages for all biomass sensors
+    """
     last_battv=dict()
-    for j in bms:
-        last_battv[bms[j].id] = bms[j].battv[-1]
+    for i in range(1, bmass_num + 1):
+        bmx = firebase.bmass_sensor(i, 1)
+        last_battv[bmx.id] = bmx.battv[-1]
 
-    last_data_bms = dict()
-    for k in bms:
-        last_data_bms[bms[k].id] = bms[k].d_dt[-1]
-    
-    last_data_haucs = dict()
-    for k in ponds:
-        last_data_haucs[ponds[k].id] = ponds[k].d_dt[-1] 
-
-
-    firebase.logout(fb_app)
-    
-    return bms, last_battv, last_data_bms, last_data_haucs
-
-def generate_graphs():
-    bms = load_data()
-    for i in bms:
-        bms[i].plot_timeseries(mv=10)
-
+    return last_battv
 
 app = Flask(__name__)
 
@@ -65,7 +46,7 @@ def about():
 
 @app.route('/HAUCS')
 def haucs():
-    bms, last_battv, last_data_bms, last_data_haucs = load_data()
+    last_battv = get_all_battv()
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
     
@@ -73,12 +54,7 @@ def haucs():
 
 @app.route('/biomass')
 def map():
-    # get data
-    bms, last_battv, last_data_bms, last_data_haucs = load_data()
-    # generate_graphs
-    for i in bms:
-        bms[i].plot_timeseries(mv=10)
-
+    last_battv = get_all_battv()
     with open('static/json/tanks_features.json', 'r') as file:
         data = file.read()
 
@@ -86,13 +62,17 @@ def map():
 
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
-    bms, last_battv, last_data_bms, last_data_haucs = load_data()
-    return render_template('tanks_analytics.html', sensor_id=sensor_id, last_battv=last_battv, last_collection = last_data_bms)
+    bmx = firebase.bmass_sensor(sensor_id, 600)
+    last_battv = bmx.battv[-1]
+    last_dt = bmx.d_dt[-1]
+    bmx.plot_timeseries(mv=10)
+    return render_template('tanks_analytics.html', sensor_id=sensor_id, last_battv=last_battv, last_dt=last_dt)
 
 @app.route('/pond'+'<int:pond_id>')
 def show_pond(pond_id):
-    bms, last_battv, last_data_bms, last_data_haucs = load_data()
-    return render_template('haucs_analytics.html', pond_id=pond_id, last_battv = last_battv, last_collection = last_data_haucs)
+    pondx = firebase.pond(pond_id, 48)
+    last_dt = pondx.d_dt[-1]
+    return render_template('haucs_analytics.html', pond_id=pond_id, last_dt=last_dt)
 
 if __name__ == "__main__":
     if not deployed:

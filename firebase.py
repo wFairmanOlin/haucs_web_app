@@ -29,6 +29,12 @@ def logout(app):
     """
     firebase_admin.delete_app(app)
 
+def restart_firebase(app, key_dict):
+    firebase_admin.delete_app(app)
+    time.sleep(10)
+    new_app = login(key_dict)
+    return new_app
+
 def moving_average(x, n):
     """
     Simple moving average filter
@@ -58,16 +64,19 @@ def to_datetime(dates, tz_aware=True):
 
 class bmass_sensor():
 
-    def __init__(self, name):
-        ref = db.reference('/' + name)
-        data = ref.get()
+    def __init__(self, name, n):
+        ref_data = db.reference('/bmass_' + str(name) + '/data')
+        ref_status = db.reference('/bmass_' + str(name) + '/status')
+        data = dict()
+        data['data'] = ref_data.order_by_key().limit_to_last(n).get()
+        data['status'] = ref_status.order_by_key().limit_to_last(n).get()
         self.d_dt = to_datetime(data['data'])
         self.s_dt = to_datetime(data['status'])
         self.on = np.array([int(data['data'][i][1]) for i in data['data']])
         self.off = np.array([int(data['data'][i][0]) for i in data['data']])
         self.g = np.array([int(data['data'][i][2]) for i in data['data']])
         self.battv = np.array([float(data['status'][i]['batt_v']) for i in data['status']])
-        self.id = int(name[-1])
+        self.id = int(name)
 
     def plot_timeseries(self, mv=3):
         # Set date format for x-axis labels
@@ -88,11 +97,11 @@ class bmass_sensor():
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.savefig("static/"+ str(self.id) + "_timeseries.png")
 
-class ponds_sensors():
+class pond():
 
-    def __init__(self,name):
-        ref = db.reference('/LH_Farm/pond_1')
-        data = ref.get()
+    def __init__(self, name, n):
+        ref = db.reference('/LH_Farm/pond_' + str(name))
+        data = ref.order_by_key().limit_to_last(n).get()
         self.d_dt = to_datetime(data)
         self.do = np.array([(data[i]['do']) for i in data])
         self.heading = np.array([(data[i]['heading']) for i in data])
@@ -102,7 +111,7 @@ class ponds_sensors():
         self.lng = np.array([(data[i]['lng']) for i in data])
         self.pressure = np.array([(data[i]['pressure']) for i in data])
         self.temp = np.array([(data[i]['temp']) for i in data])
-        self.id = int(name[-1])
+        self.id = int(name)
     
 if __name__ == "__main__":
 
