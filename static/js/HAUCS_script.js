@@ -1,20 +1,20 @@
 let map;
 
 // Function that styles the boxes given their last voltage
-function boxStyle(pond_id,voltage) {
-  var mediumBatt = 3.7;
-  var lowBatt = 3.4;
+function boxStyle(pond_id, do_value) {
+  var mediumDO = 60;
+  var lowDO = 40;
   let color = 'gray';
 
-    if (voltage<=lowBatt){
+    if (do_value<=lowDO){
       color = 'red';
     }
 
-    else if(voltage>=lowBatt & voltage<mediumBatt){
+    else if(do_value>lowDO & do_value<=mediumDO){
       color = 'orange';
     }
 
-    else if(voltage>=mediumBatt){
+    else if(do_value>mediumDO){
       color = "green";
     }
 
@@ -40,9 +40,9 @@ function initMap() {
   // Call style function
   map.data.setStyle((feature) => {
     let pond_id = feature.getProperty('number');
-    let voltage = battVolt_HAUCS[pond_id]
+    let do_value = do_HAUCS[pond_id]
 
-    color = boxStyle(pond_id, voltage)
+    color = boxStyle(pond_id, do_value)
    
     return /** @type {!google.maps.Data.StyleOptions} */ {
       fillColor: color,

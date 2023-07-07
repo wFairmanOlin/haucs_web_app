@@ -10,11 +10,11 @@ function boxStyle(pond_id,voltage) {
       color = 'red';
     }
 
-    else if(voltage>=lowBatt & voltage<mediumBatt){
+    else if(voltage>lowBatt & voltage<=mediumBatt){
       color = 'orange';
     }
 
-    else if(voltage>=mediumBatt){
+    else if(voltage>mediumBatt){
       color = "green";
     }
 

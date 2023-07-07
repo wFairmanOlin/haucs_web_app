@@ -10,7 +10,6 @@ import firebase_admin
 from firebase_admin import db
 from firebase_admin import credentials
 import pytz
-import data_generator
 matplotlib.use('agg')
 
 def login(key_dict):
@@ -28,6 +27,12 @@ def logout(app):
     Logout of a Firebase Instance
     """
     firebase_admin.delete_app(app)
+
+def restart_firebase(app, key_dict):
+    firebase_admin.delete_app(app)
+    time.sleep(10)
+    new_app = login(key_dict)
+    return new_app
 
 def moving_average(x, n):
     """
@@ -58,16 +63,19 @@ def to_datetime(dates, tz_aware=True):
 
 class bmass_sensor():
 
-    def __init__(self, name):
-        ref = db.reference('/' + name)
-        data = ref.get()
+    def __init__(self, name, n):
+        ref_data = db.reference('/bmass_' + str(name) + '/data')
+        ref_status = db.reference('/bmass_' + str(name) + '/status')
+        data = dict()
+        data['data'] = ref_data.order_by_key().limit_to_last(n).get()
+        data['status'] = ref_status.order_by_key().limit_to_last(n).get()
         self.d_dt = to_datetime(data['data'])
         self.s_dt = to_datetime(data['status'])
         self.on = np.array([int(data['data'][i][1]) for i in data['data']])
         self.off = np.array([int(data['data'][i][0]) for i in data['data']])
         self.g = np.array([int(data['data'][i][2]) for i in data['data']])
         self.battv = np.array([float(data['status'][i]['batt_v']) for i in data['status']])
-        self.id = int(name[-1])
+        self.id = int(name)
 
     def plot_timeseries(self, mv=3):
         # Set date format for x-axis labels
@@ -80,19 +88,17 @@ class bmass_sensor():
 
         plt.figure()
         plt.plot(self.d_dt[window], moving_average(self.on[window] - self.off[window], mv))
-        # plt.xlim(lower, upper)
-        # plt.ylim(0, 150)
         plt.title("Sensor " + str(self.id) + " Diff Weekly")
         plt.ylabel("Sensor On - Off")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.savefig("static/"+ str(self.id) + "_timeseries.png")
 
-class ponds_sensors():
+class pond():
 
-    def __init__(self,name):
-        ref = db.reference('/LH_Farm/pond_1')
-        data = ref.get()
+    def __init__(self, name, n):
+        ref = db.reference('/LH_Farm/pond_' + str(name))
+        data = ref.order_by_key().limit_to_last(n).get()
         final_pressure=[]
         final_do = []
         final_temp = []
@@ -106,34 +112,34 @@ class ponds_sensors():
             final_pressure.append(pressure[index_hp])
             final_do.append(do[index_hp])
             final_temp.append(temp[index_hp])
-
+        
         self.d_dt = to_datetime(data)
         self.heading = np.array([(data[i]['heading']) for i in data])
         self.init_do = np.array([(data[i]['init_do']) for i in data])
         self.init_pressure = np.array([(data[i]['init_pressure']) for i in data])
         self.lat = np.array([(data[i]['lat']) for i in data])
         self.lng = np.array([(data[i]['lng']) for i in data])
-        self.pressure = final_pressure
-        self.do = final_do
-        self.temp = final_temp
-        self.id = int(name[-1])
+        self.pressure = np.array(final_pressure)
+        self.do = np.array(final_do)
+        self.temp = np.array(final_temp)
+        self.id = int(name)
+    
+    # def plot_do(self, mv=10):
+    #     # Set date format for x-axis labels
+    #     date_fmt = '%m-%d %H:%M'
+    #     # Use DateFormatter to set the data to the correct format.
+    #     date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
+    #     lower = self.d_dt[-1] - timedelta(hours=24)
 
-    def plot_do(self, mv=3):
-        # Set date format for x-axis labels
-        date_fmt = '%m-%d %H:%M'
-        # Use DateFormatter to set the data to the correct format.
-        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1] - timedelta(hours=24)
+    #     window = self.d_dt > lower
 
-        window = self.d_dt > lower
-
-        plt.figure()
-        plt.plot(self.d_dt[window], moving_average(self.do[window] - self.init_do[window], mv))
-        plt.title("Sensor " + str(self.id) + " Diff Daily")
-        plt.ylabel("DO Values (%)")
-        plt.gcf().autofmt_xdate()
-        plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig("static/"+ str(self.id) + "DO_values.png")
+    #     plt.figure()
+    #     plt.plot(self.d_dt[window], moving_average(self.pressure[window] - self.init_pressure[window], mv))
+    #     plt.title("Dissolved Oxygen " + str(self.id) + " Diff Daily")
+    #     plt.ylabel("DO (%)")
+    #     plt.gcf().autofmt_xdate()
+    #     plt.gca().xaxis.set_major_formatter(date_formatter)
+    #     plt.savefig("static/"+ str(self.id) + "_do_graph.png")
     
 if __name__ == "__main__":
 
