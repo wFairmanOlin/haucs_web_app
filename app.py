@@ -3,6 +3,8 @@ from datetime import datetime
 import firebase
 import json
 import os
+from firebase_admin import db
+from firebase_admin import credentials
 
 #define number of bmass sensors and ponds
 bmass_num = 5
@@ -41,8 +43,7 @@ def get_all_do():
     last_do = dict()
     for i in range(1, ponds + 1):
         pondx = firebase.pond(i, 1)
-        last_do[pondx.id] = int(pondx.do[-1])
-    
+        last_do[pondx.id] = int(pondx.do[-1])    
     return last_do
 
 
@@ -88,7 +89,7 @@ def show_pond(pond_id):
     last_pressure = pondx.pressure[-1]
     last_temp = round(pondx.temp[-1]*(9/5)+32,2)
     last_dt = pondx.d_dt[-1]
-    pondx.plot_do()
+    # pondx.plot_do()
     return render_template('haucs_analytics.html', pond_id=pond_id, last_dt=last_dt, last_do=last_do, last_pressure = last_pressure, last_temp = last_temp)
 
 if __name__ == "__main__":
