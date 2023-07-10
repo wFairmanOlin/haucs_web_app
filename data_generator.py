@@ -8,7 +8,7 @@ from firebase_admin import credentials
 import numpy as np
 
 # define number of ponds
-num_ponds = 43
+num_ponds = 70
 # define lower left point of map
 base_lat = 37.699912
 base_lng = -89.471409
@@ -47,6 +47,11 @@ def get_message():
 
     return message
 
+def get_do(message):
+    p = np.array(message['pressure'])
+    idx = np.where(p == p.max())
+    return message['do'][idx[0][0]]
+
 if __name__ == "__main__":
     #initialize firebase
     try:
@@ -74,7 +79,12 @@ if __name__ == "__main__":
             message = get_message()
             #send message
             pond_ref.child(message_time).set(message)
-            print(pond_id, message)
+
+            #update overview branch
+            p_overview_ref = ref.child("overview/pond_" + pond_id)
+            do = get_do(message)
+            p_overview_ref.child('last_do').set(do)
+            print(message_time, pond_id, message)
 
     #finish
     firebase_admin.delete_app(app)

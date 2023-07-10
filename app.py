@@ -41,9 +41,13 @@ def get_all_do():
     Get latest dissolved oxygen values for all ponds
     """
     last_do = dict()
-    for i in range(1, ponds + 1):
-        pondx = firebase.pond(i, 1)
-        last_do[pondx.id] = int(pondx.do[-1])    
+    p_overview = db.reference('/LH_Farm/overview')
+    data = p_overview.get()
+
+    for i in data:
+        idx = i.split('_')[-1]
+        last_do[idx] = data[i]['last_do']
+
     return last_do
 
 
