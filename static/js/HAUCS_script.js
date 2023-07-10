@@ -30,6 +30,7 @@ function initMap() {
     center: { lat: 37.7037823, lng: -89.4648105 },
     mapTypeId: 'satellite',
     mapTypeControl: false,
+    fullscreenControl: true,
     streetViewControl: false
   });
 
