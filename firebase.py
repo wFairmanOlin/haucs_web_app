@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 from datetime import timedelta
 import numpy as np
-import pandas as pd
 import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
@@ -77,7 +76,7 @@ class bmass_sensor():
         self.battv = np.array([float(data['status'][i]['batt_v']) for i in data['status']])
         self.id = int(name)
 
-    def plot_timeseries(self, mv=3):
+    def plot_timeseries(self, mv):
         # Set date format for x-axis labels
         date_fmt = '%m-%d %H:%M'
         # Use DateFormatter to set the data to the correct format.
@@ -87,12 +86,11 @@ class bmass_sensor():
         window = self.d_dt > lower
 
         plt.figure()
-        plt.plot(self.d_dt[window], moving_average(self.on[window] - self.off[window], mv))
-        plt.title("Sensor " + str(self.id) + " Diff Weekly")
-        plt.ylabel("Sensor On - Off")
+        plt.plot(self.d_dt[window], moving_average(self.on[window] - self.off[window], mv), color='c')
+        plt.ylabel("Sensor On - Off", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig("static/"+ str(self.id) + "_timeseries.png")
+        plt.savefig("static/graphs/biomass/"+ str(self.id) + "_bmass_diff.png")
 
 class pond():
 
@@ -121,25 +119,27 @@ class pond():
         self.lng = np.array([(data[i]['lng']) for i in data])
         self.pressure = np.array(final_pressure)
         self.do = np.array(final_do)
-        self.temp = np.array(final_temp)
+        self.temp = (np.array(final_temp))*(9/5)+32
         self.id = int(name)
-    
-    # def plot_do(self, mv=10):
-    #     # Set date format for x-axis labels
-    #     date_fmt = '%m-%d %H:%M'
-    #     # Use DateFormatter to set the data to the correct format.
-    #     date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-    #     lower = self.d_dt[-1] - timedelta(hours=24)
 
-    #     window = self.d_dt > lower
+    def plot_temp_do(self, mv):
+        # Set date format for x-axis labels
+        date_fmt = '%m-%d %H:%M'
+        # Use DateFormatter to set the data to the correct format.
+        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
+        lower = self.d_dt[-1] - timedelta(hours=24)
 
-    #     plt.figure()
-    #     plt.plot(self.d_dt[window], moving_average(self.pressure[window] - self.init_pressure[window], mv))
-    #     plt.title("Dissolved Oxygen " + str(self.id) + " Diff Daily")
-    #     plt.ylabel("DO (%)")
-    #     plt.gcf().autofmt_xdate()
-    #     plt.gca().xaxis.set_major_formatter(date_formatter)
-    #     plt.savefig("static/"+ str(self.id) + "_do_graph.png")
+        window = self.d_dt > lower
+
+        fig, axes = plt.subplots(1,2, figsize=(12,5))
+
+        axes[0].scatter(self.d_dt[window], moving_average(self.do[window], mv), color='r')
+        axes[0].set_ylabel('Dissolved Oxygen (%)', fontsize=14)
+        axes[1].plot(self.d_dt[window], moving_average(self.temp[window], mv), 'o-',color= 'c')
+        axes[1].set_ylabel("Water temperature (°F)", fontsize=14)
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/graphs/haucs/"+ str(self.id) + "_temp_do_graph.png")
     
 if __name__ == "__main__":
 

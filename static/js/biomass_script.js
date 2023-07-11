@@ -1,9 +1,9 @@
 let map;
 
 // Function that styles the boxes given their last voltage
-function boxStyle(pond_id,voltage) {
+function boxStyle(sensor_id,voltage) {
   var mediumBatt = 3.7;
-  var lowBatt = 3.4;
+  var lowBatt = 3.6;
   let color = 'gray';
 
     if (voltage<=lowBatt){
@@ -30,7 +30,7 @@ function initMap() {
     center: center,
     mapTypeId: 'satellite',
     mapTypeControl: false,
-    fullscreenControl: false,
+    fullscreenControl: true,
     streetViewControl: false
   });
 
@@ -38,10 +38,10 @@ function initMap() {
   map.data.addGeoJson(geoFile_bms);
 
   map.data.setStyle((feature) => {
-    let pond_id = feature.getProperty('number');
-    let voltage = battVolt_bms[pond_id]
+    let sensor_id = feature.getProperty('number');
+    let voltage = battVolt_bms[sensor_id]
 
-    color = boxStyle(pond_id, voltage)
+    color = boxStyle(sensor_id, voltage)
    
     return /** @type {!google.maps.Data.StyleOptions} */ {
       fillColor: color,

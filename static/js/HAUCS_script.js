@@ -30,7 +30,6 @@ function initMap() {
     center: { lat: 37.7037823, lng: -89.4648105 },
     mapTypeId: 'satellite',
     mapTypeControl: false,
-    fullscreenControl: false,
     streetViewControl: false
   });
 
@@ -94,6 +93,13 @@ function initMap() {
 
   // Call markers function
   map_markers = createMarkers(status, marker_locations, marker_icon)
+
+  // // Create legend
+  // const legend = document.getElementById('legend');
+  // div.innerHTML = '<img src="{{ url_for("static", filename=aerator_on.svg)}}"> ';
+  // legend.appendChild(div);
+    
+  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
   // Add listeners for user interaction
   map.data.addListener("click", (event) => {
