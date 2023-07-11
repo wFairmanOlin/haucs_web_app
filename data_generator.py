@@ -15,7 +15,7 @@ base_lng = -89.471409
 map_width = 0.026387
 map_height = 0.009554
 # define start time
-generator_time = datetime(2023, 6, 25, hour=20, minute=0)
+generator_time = datetime(2023, 7, 4, hour=1, minute=0)
 # define timeout
 timeout = 60 * 60
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         app = firebase_admin.initialize_app(cred, {'databaseURL': 'https://haucs-monitoring-default-rtdb.firebaseio.com'})
 
     ref = db.reference('/LH_Farm')
-    upload_rate = 5 #seconds
+    upload_rate = 1 #seconds
 
     timeout += time.time()
     last_update = 0
@@ -72,7 +72,7 @@ if __name__ == "__main__":
             pond_id = str(np.random.randint(1, num_ponds + 1)) #upper limit is exclusive
             pond_ref = ref.child("pond_" + pond_id)
             #get a timestamp
-            generator_time += timedelta(minutes=np.random.randint(5, 10))
+            generator_time += timedelta(minutes=np.random.randint(1, 3))
             message_time = generator_time.strftime('%Y%m%d_%H:%M:%S')
             #get a message
             message = get_message()
