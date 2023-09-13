@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Recent Data</title>
+<link rel="stylesheet" href="static/css/sensors.css">
+
+{% endblock %}
+
+{% block body %}
+
+<body class="sensor-body">
+  <h1>10 Recent Data Points</h1>
+  <ul>
+    {% for i in keys %}
+    <li>{{ i }}  pond {{ data[i].pid }}
+        <ul>
+            <li>lat: {{ data[i].lat }} lng: {{ data[i].lng }}  heading: {{ data[i].heading }}</li>
+            <li>pressure: {{ data[i].pressure }}</li>
+            <li>temperature: {{ data[i].temp }}</li>
+            <li>do: {{ data[i].do }}</li>
+        </ul>
+    </li>
+    <br>
+    {% endfor %}
+  </ul>
+</body>
+
+{% endblock %}

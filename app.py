@@ -70,6 +70,11 @@ def haucs():
     
     return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
 
+@app.route('/recent')
+def recent():
+    data = db.reference("/LH_Farm/recent").get()
+    return render_template('haucs_recent.html', keys=reversed(data.keys()), data=data)
+
 @app.route('/biomass')
 def bmass():
     last_battv = get_all_battv()
