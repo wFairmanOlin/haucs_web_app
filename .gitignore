@@ -2,3 +2,5 @@
 fb_key.json
 *_timeseries.png
 .DS_store
+/static/graphs/haucs/*.png
+*.ipynb

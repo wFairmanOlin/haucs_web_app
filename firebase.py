@@ -115,14 +115,14 @@ class pond():
             final_temp.append(temp[index_hp])
         
         self.d_dt = to_datetime(data)
-        self.heading = np.array([(data[i]['heading']) for i in data])
-        self.init_do = np.array([(data[i]['init_do']) for i in data])
-        self.init_pressure = np.array([(data[i]['init_pressure']) for i in data])
-        self.lat = np.array([(data[i]['lat']) for i in data])
-        self.lng = np.array([(data[i]['lng']) for i in data])
-        self.pressure = np.array(final_pressure)
-        self.do = np.array(final_do)
-        self.temp = (np.array(final_temp))*(9/5)+32
+        self.heading = np.array([(data[i]['heading']) for i in data], dtype='float')
+        self.init_do = np.array([(data[i]['init_do']) for i in data], dtype='int')
+        self.init_pressure = np.array([(data[i]['init_pressure']) for i in data], dtype='float')
+        self.lat = np.array([(data[i]['lat']) for i in data], dtype='float')
+        self.lng = np.array([(data[i]['lng']) for i in data], dtype='float')
+        self.pressure = np.array(final_pressure, dtype='float')
+        self.do = (np.array(final_do, dtype='int') / self.init_do * 100).round()
+        self.temp = (np.array(final_temp, dtype='float'))*(9/5)+32
         self.id = int(name)
 
     def plot_temp_do(self, mv):
@@ -137,16 +137,18 @@ class pond():
 
         if data_pts < mv:
             mv=data_pts
-        
+        print(self.d_dt[window])
         plt.figure(figsize=(12,5))
         plt.subplot(1,2,1)
-        plt.plot(self.d_dt[window],moving_average(self.do[window],mv), 'o-',color='r')
+        # plt.plot(self.d_dt[window],moving_average(self.do[window],mv), 'o-',color='r')
+        plt.plot(self.d_dt[window], self.do[window], 'o-', color='r')
         # plt.scatter(self.d_dt[window],self.do[window], color='r')
         plt.ylabel('Dissolved Oxygen (%)', fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.subplot(1,2,2)
-        plt.plot(self.d_dt[window], moving_average(self.temp[window],mv), 'o-',color= 'c')
+        # plt.plot(self.d_dt[window], moving_average(self.temp[window],mv), 'o-',color= 'c')
+        plt.plot(self.d_dt[window], self.temp[window], 'o-',color= 'c')
         plt.ylabel("Water temperature (°F)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
