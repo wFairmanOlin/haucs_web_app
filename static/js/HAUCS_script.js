@@ -10,11 +10,11 @@ function boxStyle(pond_id, do_value) {
       color = 'red';
     }
 
-    else if(do_value>lowDO & do_value<=mediumDO){
+    else if(do_value<=mediumDO){
       color = 'orange';
     }
 
-    else if(do_value>mediumDO){
+    else{
       color = "green";
     }
 
