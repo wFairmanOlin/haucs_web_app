@@ -2,19 +2,19 @@ let map;
 
 // Function that styles the boxes given their last voltage
 function boxStyle(sensor_id,voltage) {
-  var mediumBatt = 3.7;
+  var mediumBatt = 3.8;
   var lowBatt = 3.6;
   let color = 'gray';
 
-    if (voltage<=lowBatt){
+    if (voltage < lowBatt){
       color = 'red';
     }
 
-    else if(voltage>lowBatt & voltage<=mediumBatt){
+    else if(voltage < mediumBatt){
       color = 'orange';
     }
 
-    else if(voltage>mediumBatt){
+    else {
       color = "green";
     }
 

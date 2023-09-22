@@ -87,7 +87,7 @@ def bmass():
 def show_sensor(sensor_id):
     bmx = firebase.bmass_sensor(sensor_id, 600)
     last_battv = bmx.battv[-1]
-    last_dt = bmx.d_dt[-1]
+    last_dt = bmx.s_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')
     bmx.plot_timeseries(mv=10)
