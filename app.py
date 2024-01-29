@@ -108,6 +108,19 @@ def show_pond(pond_id):
 def feedback():
     return render_template('feedback.html',ponds=ponds)
 
+#600 datapoints = ~7 days?
+#85 = ~24 hrs?
+@app.route('/eggs')
+def eggs():
+    bmx = firebase.bmass_sensor(1, 50)
+    last_battv = bmx.battv[-1]
+    last_dt = bmx.s_dt[-1]
+    str_date = last_dt.strftime('%A, %B %d')
+    str_time = last_dt.strftime('%I:%M %p')
+    str_current_time = datetime.now().strftime('%I:%M %p')
+    bmx.plot_timeseries(mv=10)
+    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_battv=last_battv, last_refresh = str_current_time)
+
 if __name__ == "__main__":
     if not deployed:
         app.run(debug=True)

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+    <title>Egg Data</title>
+
+<link rel="stylesheet" href="static/css/eggs.css">
+
+{% endblock %}
+
+{% block body %}
+
+<body class="sensor-body">
+
+    <div class="egg_heading">
+        <h1>Egg Data</h1>
+    </div>
+
+    <div class="data_summary">
+        <h1>Data Summary</h1>
+        <li>Sensor Battery Voltage: {{last_battv}}</li>
+        <li>Last time of data collection: {{last_time}} on {{last_date}}</li>
+        <li>Last browser refresh: {{last_refresh}}</li>
+      </div>
+
+    <div class = "graph">
+        <h1>Data Collected <br> over the last 24 hours</h1>
+        <img src="{{ url_for('static', filename='graphs/biomass/'+1|string + '_bmass_diff.png')}}">
+    </div>
+
+</body>
+
+{% endblock %}
