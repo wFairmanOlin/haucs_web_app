@@ -6,6 +6,9 @@ import os
 from firebase_admin import db
 from firebase_admin import credentials
 
+import threading
+import time
+
 #define number of bmass sensors and ponds
 bmass_num = 5
 ponds = 70
@@ -108,18 +111,23 @@ def show_pond(pond_id):
 def feedback():
     return render_template('feedback.html',ponds=ponds)
 
+@app.route('/monitor_eggs')
+def monitor_eggs():
+    firebase.check_egg_data()
+    return('Manually triggered check')
+
 #600 datapoints = ~7 days?
 #85 = ~24 hrs?
 @app.route('/eggs')
 def eggs():
-    bmx = firebase.bmass_sensor(1, 50)
-    last_battv = bmx.battv[-1]
-    last_dt = bmx.s_dt[-1]
+    egg = firebase.egg_sensor(50)
+    last_dt = egg.d_dt[-1]
+    last_v = round(egg.v[-1], 2)
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')
     str_current_time = datetime.now().strftime('%I:%M %p')
-    bmx.plot_timeseries(mv=10)
-    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_battv=last_battv, last_refresh = str_current_time)
+    egg.plot_timeseries(mv=1)
+    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_v=last_v, last_refresh = str_current_time)
 
 if __name__ == "__main__":
     if not deployed:
