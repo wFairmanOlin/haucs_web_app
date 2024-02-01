@@ -43,7 +43,7 @@ def moving_average(x, n):
     Simple moving average filter
     """
     filter = np.ones(n) / n
-    return np.convolve(x, filter, 'same')
+    return np.convolve(x, filter, 'valid')
 
 def to_datetime(dates, tz_aware=True):
     """
@@ -82,7 +82,7 @@ def check_egg_data():
                 break
 
         time.sleep(60)
-        
+  
 
 
 class bmass_sensor():
@@ -99,7 +99,7 @@ class bmass_sensor():
         self.off = np.array([int(data['data'][i][0]) for i in data['data']])
         self.g = np.array([int(data['data'][i][2]) for i in data['data']])
         self.battv = np.array([float(data['status'][i]['batt_v']) for i in data['status']])
-        self.v = (self.on - self.off)/1024
+        self.v = 3.3 * (self.on - self.off)/1023
         self.id = int(name)
 
     def plot_timeseries(self, mv):
@@ -107,14 +107,13 @@ class bmass_sensor():
         date_fmt = '%m-%d %H:%M'
         # Use DateFormatter to set the data to the correct format.
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1-mv] - timedelta(days=7)
-        upper = self.d_dt[-1-mv]
+        lower = self.d_dt[-1] - timedelta(days=7)
 
-        window = (self.d_dt > lower) & (self.d_dt < upper)
-        v = moving_average(self.v, mv)[window]
+        window = (self.d_dt > lower)
+        v = moving_average(self.v[window], mv)
 
         plt.figure()
-        plt.plot(self.d_dt[window], v, color='c')
+        plt.plot(self.d_dt[window][mv - 1 :], v, color='c')
         plt.ylabel("$\Delta $ Diode Voltage (V)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
@@ -129,24 +128,27 @@ class egg_sensor():
         self.d_dt = to_datetime(data['data'])
         self.on = np.array([int(data['data'][i]['on']) for i in data['data']])
         self.off = np.array([int(data['data'][i]['off']) for i in data['data']])
-        self.v = (self.on - self.off)/1024
+        self.v = 3.3 * (self.on - self.off)/1023
         self.id = 'egg'
 
-    def plot_timeseries(self, mv):
-        date_fmt = '%m-%d %H:%M'
+    def plot_timeseries(self, mv = 10, x = 1):
+        # date_fmt = '%m-%d %H:%M'
+        date_fmt = '%I:%M%p'
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1-mv] - timedelta(days=1)
-        upper = self.d_dt[-1-mv]
+        lower = self.d_dt[-1] - timedelta(days=7)
+        # upper = self.d_dt[-1-mv]
 
         #potentially learn & use a different smoothing algorithm??
-        window = (self.d_dt > lower) & (self.d_dt < upper)
-        v = moving_average(self.v, mv)[window]
+        window = (self.d_dt > lower)
+        v = moving_average(self.v[window], mv)
 
         plt.figure()
-        plt.plot(self.d_dt[window], v, color='c')
+        plt.plot(self.d_dt[window][mv - 1 :], v, color='c')
+        plt.scatter(self.d_dt[window][mv - 1 :: x], self.v[window][mv - 1 :: x], alpha=0.5)
         plt.ylabel("$\Delta $ Diode Voltage (V)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.tight_layout()
         plt.savefig("static/graphs/biomass/egg_eye_1_diff.png")
 
 class pond():
