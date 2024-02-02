@@ -108,16 +108,9 @@ def show_pond(pond_id):
 def feedback():
     return render_template('feedback.html',ponds=ponds)
 
-@app.route('/monitor_eggs')
-def monitor_eggs():
-    firebase.check_egg_data()
-    return('Manually triggered check')
-
-#600 datapoints = ~7 days?
-#85 = ~24 hrs?
 @app.route('/eggs')
 def eggs():
-    egg = firebase.egg_sensor(1000)
+    egg = firebase.egg_sensor(2880)
     last_dt = egg.d_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')

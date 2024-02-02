@@ -10,10 +10,6 @@ from firebase_admin import db
 from firebase_admin import credentials
 import pytz
 
-import threading
-import time
-
-
 matplotlib.use('agg')
 
 def login(key_dict):
@@ -63,26 +59,7 @@ def to_datetime(dates, tz_aware=True):
             i_dt = tz.localize(i_dt)
 
         dt.append(i_dt)
-    return np.array(dt)
-
-def check_egg_data():
-    email_sent = False
-    while email_sent is False:
-        ref_data = db.reference('/egg_eye_1/data')
-        data = dict()
-        data['data'] = ref_data.order_by_key().limit_to_last(3).get()
-        on = np.array([int(data['data'][i]['on']) for i in data['data']])
-        off = np.array([int(data['data'][i]['off']) for i in data['data']])
-        v = (on - off)/1024
-        
-        for datum in v:
-            if datum > 0.6:
-                print("Triggered an email")
-                email_sent = True
-                break
-
-        time.sleep(60)
-  
+    return np.array(dt)  
 
 
 class bmass_sensor():
@@ -135,10 +112,8 @@ class egg_sensor():
         # date_fmt = '%m-%d %H:%M'
         date_fmt = '%I:%M%p'
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1] - timedelta(days=7)
-        # upper = self.d_dt[-1-mv]
+        lower = self.d_dt[-1] - timedelta(days=100)
 
-        #potentially learn & use a different smoothing algorithm??
         window = (self.d_dt > lower)
         v = moving_average(self.v[window], mv)
 
