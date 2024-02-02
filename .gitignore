@@ -5,3 +5,4 @@ fb_key.json
 /static/graphs/haucs/*.png
 /static/graphs/biomass/*.png
 *.ipynb
+*.png

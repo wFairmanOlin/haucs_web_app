@@ -108,6 +108,16 @@ def show_pond(pond_id):
 def feedback():
     return render_template('feedback.html',ponds=ponds)
 
+@app.route('/eggs')
+def eggs():
+    egg = firebase.egg_sensor(2880)
+    last_dt = egg.d_dt[-1]
+    str_date = last_dt.strftime('%A, %B %d')
+    str_time = last_dt.strftime('%I:%M %p')
+    str_current_time = datetime.now().strftime('%I:%M %p')
+    egg.plot_timeseries(mv=10)
+    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = str_current_time)
+
 if __name__ == "__main__":
     if not deployed:
         app.run(debug=True)
