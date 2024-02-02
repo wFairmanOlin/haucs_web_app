@@ -106,10 +106,10 @@ class egg_sensor():
         self.on = np.array([int(data['data'][i]['on']) for i in data['data']])
         self.off = np.array([int(data['data'][i]['off']) for i in data['data']])
         self.v = 3.3 * (self.on - self.off)/1023
+        self.current_time = datetime.now().astimezone(pytz.timezone("US/Eastern")).strftime('%I:%M %p')
         self.id = 'egg'
 
     def plot_timeseries(self, mv = 10, x = 1):
-        # date_fmt = '%m-%d %H:%M'
         date_fmt = '%I:%M%p'
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
         lower = self.d_dt[-1] - timedelta(days=100)

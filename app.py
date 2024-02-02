@@ -114,9 +114,9 @@ def eggs():
     last_dt = egg.d_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')
-    str_current_time = datetime.now().strftime('%I:%M %p')
+    current_time = egg.current_time
     egg.plot_timeseries(mv=10)
-    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = str_current_time)
+    return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = current_time)
 
 if __name__ == "__main__":
     if not deployed:
