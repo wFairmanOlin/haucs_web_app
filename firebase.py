@@ -112,7 +112,7 @@ class egg_sensor():
     def plot_timeseries(self, mv = 10, x = 1):
         date_fmt = '%I:%M%p'
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1] - timedelta(days=100)
+        lower = self.d_dt[-1] - timedelta(days=1)
 
         window = (self.d_dt > lower)
         v = moving_average(self.v[window], mv)
