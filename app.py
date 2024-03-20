@@ -110,12 +110,13 @@ def feedback():
 
 @app.route('/eggs')
 def eggs():
-    egg = firebase.egg_sensor(2880)
+    egg = firebase.egg_sensor(800)
     last_dt = egg.d_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')
     current_time = egg.current_time
-    egg.plot_timeseries(mv=10)
+    egg.plot_timeseries()
+    egg.plot_frequency()
     return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = current_time)
 
 if __name__ == "__main__":

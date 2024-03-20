@@ -9,6 +9,7 @@ import firebase_admin
 from firebase_admin import db
 from firebase_admin import credentials
 import pytz
+from scipy.fft import fft, fftfreq
 
 matplotlib.use('agg')
 
@@ -99,32 +100,56 @@ class bmass_sensor():
 class egg_sensor():
 
     def __init__(self, n):
-        ref_data = db.reference('/egg_eye_1/data')
+        fref = db.reference('/egg_eye_1/fdata')
+        aref = db.reference('/egg_eye_1/adcdata')
         data = dict()
-        data['data'] = ref_data.order_by_key().limit_to_last(n).get()
-        self.d_dt = to_datetime(data['data'])
-        self.on = np.array([int(data['data'][i]['on']) for i in data['data']])
-        self.off = np.array([int(data['data'][i]['off']) for i in data['data']])
-        self.v = 3.3 * (self.on - self.off)/1023
+        data['fdata'] = fref.order_by_key().limit_to_last(n).get()
+        data['adata'] = aref.order_by_key().limit_to_last(n).get()
+        self.d_dt = to_datetime(data['fdata'])
         self.current_time = datetime.now().astimezone(pytz.timezone("US/Eastern")).strftime('%I:%M %p')
         self.id = 'egg'
+        self.data = data
+        self.keys = list(data['fdata'].keys())
 
-    def plot_timeseries(self, mv = 10, x = 1):
-        date_fmt = '%I:%M%p'
-        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
-        lower = self.d_dt[-1] - timedelta(days=1)
+    def plot_timeseries(self):
+        
+        x = np.arange(200) / 40 #this probably shouldnt be hard coded
+        yf = np.array(self.data['fdata'][self.keys[-2]]['data']).astype('int')
+        ya = np.array(self.data['adata'][self.keys[-2]]['data']).astype('float')
+        
+        plt.figure()
+        plt.subplot(2,1,1)
+        plt.title('Timeseries Sample')
+        plt.ylabel("f sensor")
+        plt.plot(x, yf)
+        plt.subplot(2,1,2)
+        plt.ylabel("a sensor")
+        plt.xlabel("time (seconds)")
+        plt.plot(x, ya)
+        plt.savefig("static/graphs/biomass/egg_eye_1_timeseries.png")
 
-        window = (self.d_dt > lower)
-        v = moving_average(self.v[window], mv)
+    def plot_frequency(self):
+        N = 512 # make a multiple of 2
+        fs = 40
+        freq_range = fftfreq(N, 1 / fs)[:N//2]
+        yf = np.array(self.data['fdata'][self.keys[-2]]['data']).astype('int')
+        yf = yf / yf.max()
+        ya = np.array(self.data['adata'][self.keys[-2]]['data']).astype('float')
+        ya = ya / ya.max()
+        fft_f = np.abs(fft(yf, N)[:N//2])
+        fft_a = np.abs(fft(ya, N)[:N//2])
 
         plt.figure()
-        plt.plot(self.d_dt[window][mv - 1 :], v, color='c')
-        plt.scatter(self.d_dt[window][mv - 1 :: x], self.v[window][mv - 1 :: x], alpha=0.5)
-        plt.ylabel("$\Delta $ Diode Voltage (V)", fontsize=14)
-        plt.gcf().autofmt_xdate()
-        plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.tight_layout()
-        plt.savefig("static/graphs/biomass/egg_eye_1_diff.png")
+        plt.subplot(2,1,1)
+        plt.title("Frequency Info")
+        plt.ylabel("f sensor")
+        plt.plot(freq_range, fft_f)
+        plt.subplot(2,1,2)
+        plt.ylabel("a sensor")
+        plt.xlabel("Hz")
+        plt.plot(freq_range, fft_a)
+        plt.savefig("static/graphs/biomass/egg_eye_1_frequency.png")
+
 
 class pond():
 
