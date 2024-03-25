@@ -109,13 +109,12 @@ class egg_sensor():
         self.current_time = datetime.now().astimezone(pytz.timezone("US/Eastern")).strftime('%I:%M %p')
         self.id = 'egg'
         self.data = data
-        self.keys = list(data['fdata'].keys())
+        self.keys = list(data['adata'].keys())
 
     def plot_timeseries(self):
-        
         x = np.arange(200) / 40 #this probably shouldnt be hard coded
-        yf = np.array(self.data['fdata'][self.keys[-2]]['data']).astype('int')
-        ya = np.array(self.data['adata'][self.keys[-2]]['data']).astype('float')
+        yf = np.array(self.data['fdata'][self.keys[-1]]['data']).astype('int')
+        ya = np.array(self.data['adata'][self.keys[-1]]['data']).astype('float')
         
         plt.figure()
         plt.subplot(2,1,1)
@@ -132,9 +131,9 @@ class egg_sensor():
         N = 512 # make a multiple of 2
         fs = 40
         freq_range = fftfreq(N, 1 / fs)[:N//2]
-        yf = np.array(self.data['fdata'][self.keys[-2]]['data']).astype('int')
+        yf = np.array(self.data['fdata'][self.keys[-1]]['data']).astype('int')
         yf = yf / yf.max()
-        ya = np.array(self.data['adata'][self.keys[-2]]['data']).astype('float')
+        ya = np.array(self.data['adata'][self.keys[-1]]['data']).astype('float')
         ya = ya / ya.max()
         fft_f = np.abs(fft(yf, N)[:N//2])
         fft_a = np.abs(fft(ya, N)[:N//2])
@@ -149,6 +148,30 @@ class egg_sensor():
         plt.xlabel("Hz")
         plt.plot(freq_range, fft_a)
         plt.savefig("static/graphs/biomass/egg_eye_1_frequency.png")
+    
+    def plot_prediction(self):
+        # Set date format for x-axis labels
+        date_fmt = '%m-%d %H:%M'
+        # Use DateFormatter to set the data to the correct format.
+        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
+        start = (datetime.now() - timedelta(days=1)).astimezone(pytz.timezone("US/Eastern")).strftime('%Y%m%d_%H:%M:%S')
+        end = datetime.now().astimezone(pytz.timezone("US/Eastern")).strftime('%Y%m%d_%H:%M:%S')
+
+        fdata = db.reference('/egg_eye_1/fdetect/').order_by_key().start_at(start).end_at(end).get()
+        adata = db.reference('/egg_eye_1/adetect/').order_by_key().start_at(start).end_at(end).get()
+
+        dt = to_datetime(list(fdata.keys()))
+
+        plt.figure()
+        plt.plot(dt, list(fdata.values()))
+        plt.plot(dt, list(adata.values()))
+        plt.title("Detection Algorithm: TRAINING...")
+        plt.legend(['f sensor', 'a sensor'])
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/graphs/biomass/egg_eye_1_detect.png")
+
+
 
 
 class pond():
