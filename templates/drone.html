@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Recent Data</title>
+<link rel="stylesheet" href="static/css/sensors.css">
+
+{% endblock %}
+
+{% block body %}
+
+<body class="sensor-body">
+  <h1>WEB BASED GCS</h1>
+  <ul>
+        Flight Information
+        <li>status:  {{ data.flight_status }}</li> 
+        <li>altitude: {{ data.alt }}</li>
+        <li>latitude: {{ data.lat }}</li>
+        <li>longitude: {{ data.lon }}</li>
+        <br>
+        Payload
+        <li>DO: {{ data.p_DO }}</li>
+        <li>pressure: {{ data.p_pres }}</li>
+        <li>temperature: {{ data.p_temp }}</li>
+        
+  </ul>
+</body>
+
+{% endblock %}

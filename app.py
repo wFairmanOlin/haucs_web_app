@@ -83,6 +83,12 @@ def bmass():
 
     return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
+@app.route('/drone')
+def drone():
+    data = db.reference('/LH_Farm/drone').get()
+    print(data)
+    return render_template('drone.html', data=data)
+
 @app.route('/sensor'+'<int:sensor_id>')
 def show_sensor(sensor_id):
     bmx = firebase.bmass_sensor(sensor_id, 600)

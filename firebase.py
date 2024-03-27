@@ -198,6 +198,7 @@ class egg_sensor():
 
         plt.figure()
         plt.scatter(dt, peaks, color='r')
+        plt.plot(dt[9:], moving_average(peaks, 10), color='orange', alpha=1)
         plt.title('Turbidity Peak Detector')
         plt.ylabel("Number of Peaks")
         plt.gcf().autofmt_xdate()
