@@ -118,6 +118,7 @@ def eggs():
     egg.plot_timeseries()
     egg.plot_frequency()
     egg.plot_prediction()
+    egg.plot_peakDetection()
     return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = current_time)
 
 if __name__ == "__main__":

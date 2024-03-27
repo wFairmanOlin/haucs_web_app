@@ -164,18 +164,45 @@ class egg_sensor():
 
         dt = to_datetime(list(fdata.keys()))
 
-        plt.figure()
+        #convert text
+        fy = ['eggs' if i == 'outlier' else 'no eggs' for i in list(fdata.values())]
+        ay = ['eggs' if i == 'outlier' else 'no eggs' for i in list(adata.values())]
+        plt.figure(figsize=(7,5))
         plt.subplot(2,1,1)
-        plt.plot(dt, list(fdata.values()))
+        plt.plot(dt, fy)
         plt.title("Detection Algorithm: PARTIALLY TRAINED")
         plt.ylabel('bmass')
         plt.subplot(2,1,2)
-        plt.plot(dt, list(adata.values()), color='r')
+        plt.plot(dt, ay, color='r')
         plt.ylabel("turbidity")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.savefig("static/graphs/biomass/egg_eye_1_detect.png")
 
+    def plot_peakDetection(self):
+        # Set date format for x-axis labels
+        date_fmt = '%m-%d %H:%M'
+        # Use DateFormatter to set the data to the correct format.
+        date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
+        start = (datetime.now() - timedelta(days=1)).astimezone(pytz.timezone("US/Eastern")).strftime('%Y%m%d_%H:%M:%S')
+        end = datetime.now().astimezone(pytz.timezone("US/Eastern")).strftime('%Y%m%d_%H:%M:%S')
+
+        data = db.reference('/egg_eye_1/apeak/').order_by_key().start_at(start).end_at(end).get()
+
+        keys =  list(data.keys())
+        dt = to_datetime(keys)
+ 
+        peaks = []
+        for i, k in enumerate(keys):
+            peaks.append(int(data[k]))
+
+        plt.figure()
+        plt.plot(dt, peaks)
+        plt.title('Turbidity Peak Detector')
+        plt.ylabel("Number of Peaks")
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/graphs/biomass/egg_eye_1_peaks.png")
 
 
 
