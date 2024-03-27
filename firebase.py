@@ -170,7 +170,7 @@ class egg_sensor():
         plt.figure(figsize=(7,5))
         plt.subplot(2,1,1)
         plt.plot(dt, fy)
-        plt.title("Detection Algorithm: PARTIALLY TRAINED")
+        plt.title("Detection Algorithm")
         plt.ylabel('bmass')
         plt.subplot(2,1,2)
         plt.plot(dt, ay, color='r')
@@ -197,7 +197,7 @@ class egg_sensor():
             peaks.append(int(data[k]))
 
         plt.figure()
-        plt.plot(dt, peaks)
+        plt.scatter(dt, peaks, color='r')
         plt.title('Turbidity Peak Detector')
         plt.ylabel("Number of Peaks")
         plt.gcf().autofmt_xdate()
