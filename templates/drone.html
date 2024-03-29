@@ -2,7 +2,8 @@
 
 {% block head %}
 
-<title>Recent Data</title>
+<title>Drone</title>
+<meta http-equiv="refresh" content="1">
 <link rel="stylesheet" href="static/css/sensors.css">
 
 {% endblock %}
@@ -12,13 +13,18 @@
 <body class="sensor-body">
   <h1>WEB BASED GCS</h1>
   <ul>
-        Flight Information
+        <h2>Flight Information</h2>
         <li>status:  {{ data.flight_status }}</li> 
         <li>altitude: {{ data.alt }}</li>
         <li>latitude: {{ data.lat }}</li>
         <li>longitude: {{ data.lon }}</li>
+        <li>heading: {{ data.hdg }}</li>
         <br>
-        Payload
+        <h2>Vehicle Health</h2>
+        <li>battery voltage: {{ data.battv }}</li>
+        <li>battery current: {{ data.current }}</li>
+        <br>
+        <h2>Payload</h2>
         <li>DO: {{ data.p_DO }}</li>
         <li>pressure: {{ data.p_pres }}</li>
         <li>temperature: {{ data.p_temp }}</li>
