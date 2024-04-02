@@ -14,8 +14,12 @@
   <h1>WEB BASED GCS</h1>
   <ul>
         <h2>Flight Information</h2>
+        <li>mode: {{ data['data'].flight_mode }}</li>
         <li>status:  {{ data['data'].flight_status }}</li>
         <li>on water: {{ data['data'].on_water }}</li>
+        <br>
+        <h2>Position Information</h2>
+        <li>velocity: {{ data['data'].vel }} m/s</li>
         <li>altitude: {{ data['data'].alt }} m</li>
         <li>latitude: {{ data['data'].lat }}</li>
         <li>longitude: {{ data['data'].lon }}</li>
@@ -24,7 +28,7 @@
         <br>
         <h2>Vehicle Health</h2>
         <li>battery voltage: {{ data['data'].voltage }}</li>
-        <li>battery current: {{ data['data'].currrent }}</li>
+        <li>battery current: {{ data['data'].current }}</li>
         <li>last update: {{ data['time'].BATTERY_STATUS }} s</li>
         <br>
         <h2>Payload</h2>
