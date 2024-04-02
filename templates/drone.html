@@ -3,7 +3,7 @@
 {% block head %}
 
 <title>Drone</title>
-<meta http-equiv="refresh" content="1">
+<meta http-equiv="refresh" content="2">
 <link rel="stylesheet" href="static/css/sensors.css">
 
 {% endblock %}
@@ -14,20 +14,24 @@
   <h1>WEB BASED GCS</h1>
   <ul>
         <h2>Flight Information</h2>
-        <li>status:  {{ data.flight_status }}</li> 
-        <li>altitude: {{ data.alt }}</li>
-        <li>latitude: {{ data.lat }}</li>
-        <li>longitude: {{ data.lon }}</li>
-        <li>heading: {{ data.hdg }}</li>
+        <li>status:  {{ data['data'].flight_status }}</li>
+        <li>on water: {{ data['data'].on_water }}</li>
+        <li>altitude: {{ data['data'].alt }} m</li>
+        <li>latitude: {{ data['data'].lat }}</li>
+        <li>longitude: {{ data['data'].lon }}</li>
+        <li>heading: {{ data['data'].hdg }} deg</li>
+        <li>last update: {{ data['time'].GLOBAL_POSITION_INT }} s</li>
         <br>
         <h2>Vehicle Health</h2>
-        <li>battery voltage: {{ data.battv }}</li>
-        <li>battery current: {{ data.current }}</li>
+        <li>battery voltage: {{ data['data'].voltage }}</li>
+        <li>battery current: {{ data['data'].currrent }}</li>
+        <li>last update: {{ data['time'].BATTERY_STATUS }} s</li>
         <br>
         <h2>Payload</h2>
-        <li>DO: {{ data.p_DO }}</li>
-        <li>pressure: {{ data.p_pres }}</li>
-        <li>temperature: {{ data.p_temp }}</li>
+        <li>DO: {{ data['data'].p_DO }} mV</li>
+        <li>pressure: {{ data['data'].p_pres }} hPa</li>
+        <li>temperature: {{ data['data'].p_temp }} c</li>
+        <li>last update: {{ data['time'].NAMED_VALUE_FLOAT }} s</li>
         
   </ul>
 </body>
