@@ -71,10 +71,18 @@ def bmass():
     return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
 @app.route('/drone')
-def drone():
+def drones():
     data = db.reference('/LH_Farm/drone').get()
-    print(data)
-    return render_template('drone.html', data=data)
+    keys = list(data.keys())
+    keys.sort(key=str.lower)
+    print(keys)
+    return render_template('drone_list.html', keys=keys)
+
+@app.route('/drone/'+'<drone_id>')
+def drone(drone_id):
+    print("going to: ", drone_id)
+    data = db.reference('LH_Farm/drone/' + drone_id + "/").get()
+    return render_template('drone.html', id=drone_id, data=data)
 
 @app.route('/eggs')
 def eggs():
