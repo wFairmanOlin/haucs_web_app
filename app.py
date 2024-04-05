@@ -1,10 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from datetime import datetime
 import firebase
 import json
 import os
 from firebase_admin import db
-from firebase_admin import credentials
 
 #define number of bmass sensors and ponds
 bmass_num = 5
@@ -70,19 +69,27 @@ def bmass():
 
     return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
+'''
+Data Source: call this from javascript to get fresh data
+'''
+@app.route('/data/' + '<ref>', methods=['GET'])
+def data(ref):
+    db_path = ref.split(' ')
+    db_path = "/".join(db_path)
+    data = db.reference(db_path).get()
+    return jsonify(data)
+
+
 @app.route('/drone')
-def drones():
+def drone_list():
     data = db.reference('/LH_Farm/drone').get()
     keys = list(data.keys())
     keys.sort(key=str.lower)
-    print(keys)
     return render_template('drone_list.html', keys=keys)
 
 @app.route('/drone/'+'<drone_id>')
 def drone(drone_id):
-    print("going to: ", drone_id)
-    data = db.reference('LH_Farm/drone/' + drone_id + "/").get()
-    return render_template('drone.html', id=drone_id, data=data)
+    return render_template('drone.html', id=drone_id)
 
 @app.route('/eggs')
 def eggs():

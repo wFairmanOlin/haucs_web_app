@@ -6,8 +6,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
 import firebase_admin
-from firebase_admin import db
-from firebase_admin import credentials
+from firebase_admin import db, credentials
 import pytz
 from scipy.fft import fft, fftfreq
 
