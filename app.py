@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from datetime import datetime
 import firebase
 import json
@@ -104,8 +104,13 @@ def eggs():
     egg.plot_peakDetection()
     return render_template('eggs.html',  last_date=str_date, last_time=str_time, last_refresh = current_time)
 
-@app.route('/feedback')
+@app.route('/feedback', methods=['POST', 'GET'])
 def feedback():
+    if request.method == 'POST':
+        if request.values.get('comment'):
+            comment = request.values.get('comment')
+            msg_time = firebase.get_time_header()
+            db.reference('/LH_Farm/comments/' + msg_time + '/').set(comment)
     return render_template('feedback.html',ponds=ponds)
 
 @app.route('/HAUCS')

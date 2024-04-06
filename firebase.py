@@ -9,6 +9,7 @@ import firebase_admin
 from firebase_admin import db, credentials
 import pytz
 from scipy.fft import fft, fftfreq
+import time
 
 matplotlib.use('agg')
 
@@ -60,6 +61,9 @@ def to_datetime(dates, tz_aware=True):
 
         dt.append(i_dt)
     return np.array(dt)  
+
+def get_time_header():
+    return time.strftime('%Y%m%d_%H:%M:%S', time.gmtime(time.time()))
 
 
 class bmass_sensor():
