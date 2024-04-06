@@ -107,10 +107,24 @@ def eggs():
 @app.route('/feedback', methods=['POST', 'GET'])
 def feedback():
     if request.method == 'POST':
+        msg_time = firebase.get_time_header()
+        #handle comment requests
         if request.values.get('comment'):
             comment = request.values.get('comment')
-            msg_time = firebase.get_time_header()
             db.reference('/LH_Farm/comments/' + msg_time + '/').set(comment)
+        #handle manual do inputs
+        elif request.values.get('pond'):
+            pond_id = "pond_" + request.values.get('pond')
+            do = request.values.get('do')
+            do = do.replace("%", "")
+            try:
+                do = int(do)
+                db.reference("/LH_Farm/overview/" + pond_id + "/last_do/").set(do)
+            except:
+                print("cannot  convert")
+            data = {'type':'manual', 'do':do}
+            db.reference("/LH_Farm/" + pond_id + "/" + msg_time + "/").set(data)
+            
     return render_template('feedback.html',ponds=ponds)
 
 @app.route('/HAUCS')
