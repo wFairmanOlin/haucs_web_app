@@ -1,7 +1,6 @@
 /__pycache__ 
 fb_key.json
 .DS_store
-/static/graphs/biomass/*.png
-/static/graphs/haucs/*.png
+/static/graphs
 *.ipynb
 *.png
