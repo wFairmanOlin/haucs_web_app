@@ -128,7 +128,7 @@ class egg_sensor():
         plt.ylabel("turbidity")
         plt.xlabel("time (seconds)")
         plt.plot(x, ya, color='r')
-        plt.savefig("static/graphs/biomass/egg_eye_1_timeseries.png")
+        plt.savefig("static/graphs/egg/egg_eye_1_timeseries.png")
 
     def plot_frequency(self):
         N = 512 # make a multiple of 2
@@ -152,7 +152,7 @@ class egg_sensor():
         plt.ylim(top=80)
         plt.xlabel("Hz")
         plt.plot(freq_range, fft_a, color='r')
-        plt.savefig("static/graphs/biomass/egg_eye_1_frequency.png")
+        plt.savefig("static/graphs/egg/egg_eye_1_frequency.png")
     
     def plot_prediction(self):
         # Set date format for x-axis labels
@@ -180,7 +180,7 @@ class egg_sensor():
         plt.ylabel("turbidity")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig("static/graphs/biomass/egg_eye_1_detect.png")
+        plt.savefig("static/graphs/egg/egg_eye_1_detect.png")
 
     def plot_peakDetection(self):
         # Set date format for x-axis labels
@@ -206,7 +206,7 @@ class egg_sensor():
         plt.ylabel("Number of Peaks")
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
-        plt.savefig("static/graphs/biomass/egg_eye_1_peaks.png")
+        plt.savefig("static/graphs/egg/egg_eye_1_peaks.png")
 
 
 

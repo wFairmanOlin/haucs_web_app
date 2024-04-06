@@ -166,6 +166,17 @@ def show_sensor(sensor_id):
 
 
 if __name__ == "__main__":
+    print("checking paths")
+    if not os.path.exists('static/graphs'):
+        os.mkdir('static/graphs')
+    if not os.path.exists('static/graphs/eggs'):
+        os.mkdir('static/graphs/eggs')
+    if not os.path.exists('static/graphs/haucs'):
+        os.mkdir('static/graphs/haucs')
+    if not os.path.exists('static/graphs/biomass'):
+        os.mkdir('static/graphs/biomass')
+        
     if not deployed:
         app.run(debug=True)
+
     
