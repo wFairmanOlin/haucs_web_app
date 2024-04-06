@@ -5,9 +5,15 @@ import json
 import os
 from firebase_admin import db
 
-#define number of bmass sensors and ponds
-bmass_num = 5
-ponds = 70
+#create folder structure
+if not os.path.exists('static/graphs'):
+    os.mkdir('static/graphs')
+if not os.path.exists('static/graphs/eggs'):
+    os.mkdir('static/graphs/eggs')
+if not os.path.exists('static/graphs/haucs'):
+    os.mkdir('static/graphs/haucs')
+if not os.path.exists('static/graphs/biomass'):
+    os.mkdir('static/graphs/biomass')
 
 fb_key = os.getenv('fb_key')
 
@@ -27,9 +33,10 @@ fb_app = firebase.login(fb_key)
 def get_all_battv():
     """
     Get the latest battery voltages for all biomass sensors
+    TODO: THIS IS HARDCODED
     """
     last_battv=dict()
-    for i in range(1, bmass_num + 1):
+    for i in range(1, 6):
         bmx = firebase.bmass_sensor(i, 1)
         last_battv[bmx.id] = bmx.battv[-1]
 
@@ -125,7 +132,7 @@ def feedback():
             data = {'type':'manual', 'do':do}
             db.reference("/LH_Farm/" + pond_id + "/" + msg_time + "/").set(data)
             
-    return render_template('feedback.html',ponds=ponds)
+    return render_template('feedback.html')
 
 @app.route('/HAUCS')
 def haucs():
@@ -161,21 +168,7 @@ def show_sensor(sensor_id):
     bmx.plot_timeseries(mv=10)
     return render_template('tanks_analytics.html', sensor_id=sensor_id, last_date=str_date, last_time = str_time, last_battv=last_battv, last_dt=last_dt)
 
-
-
-
-
 if __name__ == "__main__":
-    print("checking paths")
-    if not os.path.exists('static/graphs'):
-        os.mkdir('static/graphs')
-    if not os.path.exists('static/graphs/eggs'):
-        os.mkdir('static/graphs/eggs')
-    if not os.path.exists('static/graphs/haucs'):
-        os.mkdir('static/graphs/haucs')
-    if not os.path.exists('static/graphs/biomass'):
-        os.mkdir('static/graphs/biomass')
-        
     if not deployed:
         app.run(debug=True)
 
