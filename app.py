@@ -47,8 +47,7 @@ def get_all_do():
     Get latest dissolved oxygen values for all ponds
     """
     last_do = dict()
-    p_overview = db.reference('/LH_Farm/overview')
-    data = p_overview.get()
+    data = db.reference('/LH_Farm/overview').get()
 
     for i in data:
         idx = i.split('_')[-1]
@@ -127,10 +126,10 @@ def feedback():
             try:
                 do = int(do)
                 db.reference("/LH_Farm/overview/" + pond_id + "/last_do/").set(do)
+                data = {'type':'manual', 'do':do}
+                db.reference("/LH_Farm/" + pond_id + "/" + msg_time + "/").set(data)
             except:
                 print("cannot  convert")
-            data = {'type':'manual', 'do':do}
-            db.reference("/LH_Farm/" + pond_id + "/" + msg_time + "/").set(data)
             
     return render_template('feedback.html')
 
@@ -142,10 +141,10 @@ def haucs():
     
     return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
 
-@app.route('/pond'+'<int:pond_id>')
+@app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
     pondx = firebase.pond(pond_id, 48)
-    last_do = pondx.do[-1]
+    last_do = round(pondx.do[-1],2)
     last_temp = round(pondx.temp[-1],2)
     last_dt = pondx.d_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')

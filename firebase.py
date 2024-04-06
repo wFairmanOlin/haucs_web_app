@@ -218,27 +218,45 @@ class pond():
         final_pressure=[]
         final_do = []
         final_temp = []
-
+        init_do = []
+        lat = []
+        lng = []
         for i in data:
-            pressure = data[i]['pressure']
-            do = data[i]['do']
-            temp = data[i]['temp']
-            high_pressure = max(pressure)
-            index_hp = pressure.index(high_pressure)
-            final_pressure.append(pressure[index_hp])
-            final_do.append(do[index_hp])
-            final_temp.append(temp[index_hp])
+            if (data[i]['type'] == 'manual') and (len(final_do) != 0):
+                final_pressure.append('nan')
+                final_do.append(data[i]['do'])
+                final_temp.append('nan')
+                init_do.append('nan')
+                lat.append('nan')
+                lng.append('nan')
+            else:
+                pressure = data[i]['pressure']
+                do = data[i]['do']
+                temp = data[i]['temp']
+                initial_do = int(data[i]['init_do'])
+                if initial_do == 0:
+                    initial_do = 0.01
+                #find highest pressure
+                high_pressure = max(pressure)
+                index_hp = pressure.index(high_pressure)
+                high_pressure = float(high_pressure)
+                #append single value for do, temp, pressure @ high pressure
+                final_pressure.append(high_pressure)
+                final_do.append(int(do[index_hp]) / initial_do * 100)
+                final_temp.append(round(float(temp[index_hp]) * (9/5) + 32, 2))
+                #append other variables
+                init_do.append(initial_do)
+                lat.append(float(data[i]['lat']))
+                lng.append(float(data[i]['lng']))
         
         self.d_dt = to_datetime(data)
-        self.heading = np.array([(data[i]['heading']) for i in data], dtype='float')
-        self.init_do = np.array([(data[i]['init_do']) for i in data], dtype='int')
-        self.init_pressure = np.array([(data[i]['init_pressure']) for i in data], dtype='float')
-        self.lat = np.array([(data[i]['lat']) for i in data], dtype='float')
-        self.lng = np.array([(data[i]['lng']) for i in data], dtype='float')
+        self.init_do = np.array(init_do, dtype='float')
+        self.lat = np.array(lat, dtype='float')
+        self.lng = np.array(lng, dtype='float')
         self.pressure = np.array(final_pressure, dtype='float')
-        self.do = (np.array(final_do, dtype='int') / self.init_do * 100).round()
-        self.temp = (np.array(final_temp, dtype='float'))*(9/5)+32
-        self.id = int(name)
+        self.do = np.array(final_do, dtype='float')
+        self.temp =np.array(final_temp, dtype='float')
+        self.id = str(name)
 
     def plot_temp_do(self, mv):
         # Set date format for x-axis labels
