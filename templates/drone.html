@@ -16,10 +16,9 @@
         .then(response => response.json())
         .then(json => {
           if (json) {
-            console.log(json.data.msg)
             document.getElementById('msg').textContent = json.data.msg;
             document.getElementById('flight_mode').textContent = json.data.flight_mode;
-            document.getElementById('flight_status').textContent = json.data.flight_status;
+            document.getElementById('arm_state').textContent = json.data.arm_state;
             document.getElementById('on_water').textContent = json.data.on_water;
             document.getElementById('vel').textContent = json.data.vel;
             document.getElementById('alt').textContent = json.data.alt;
@@ -34,6 +33,12 @@
             document.getElementById('p_DO').textContent = json.data.p_DO;
             document.getElementById('p_pres').textContent = json.data.p_pres;
             document.getElementById('p_temp').textContent = json.data.p_temp;
+            //convert time to min:sec
+            let ftime = parseInt(json.data.flight_time);
+            let fmins = Math.floor(ftime / 60);
+            let fsecs = ftime - fmins * 60;
+            document.getElementById('flight_time_mins').textContent = fmins;
+            document.getElementById('flight_time_secs').textContent = fsecs;
           }
         })
     }
@@ -46,9 +51,10 @@
     <li><span id="msg"></span></li>
     <br>
     <h2>Flight Information</h2>
-    <li>mode: <span id="flight_mode"></span></li>
-    <li>status:  <span id="flight_status"></span></li>
-    <li>on water: <span id="on_water"></span></li>
+    <li>mode:        <span id="flight_mode"></span></li>
+    <li>arm state:   <span id="arm_state"></span></li>
+    <li>on water:    <span id="on_water"></span></li>
+    <li>flight time: <span id="flight_time_mins"></span>:<span id="flight_time_secs"></span> (mins:secs)</li>
     <br>
     <h2>Position Information</h2>
     <li>velocity: <span id="vel"></span> m/s</li>
