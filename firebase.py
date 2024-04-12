@@ -57,9 +57,12 @@ def to_datetime(dates, tz_aware=True):
             print(i)
         if tz_aware:
             tz = pytz.timezone('US/Eastern')
+            # tz = pytz.timezone('UTC')
             i_dt = tz.localize(i_dt)
-
-        dt.append(i_dt)
+            # dt.append(i_dt.astimezone(pytz.timezone('US/Eastern')))
+            dt.append(i_dt)
+        else:
+            dt.append(i_dt)
     return np.array(dt)  
 
 def get_time_header():
@@ -265,23 +268,14 @@ class pond():
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Eastern")))
         lower = self.d_dt[-1] - timedelta(hours=24)
 
-        window = self.d_dt > lower
-        data_pts = np.count_nonzero(window)
-
-        if data_pts < mv:
-            mv=data_pts
-        print(self.d_dt[window])
         plt.figure(figsize=(12,5))
         plt.subplot(1,2,1)
-        # plt.plot(self.d_dt[window],moving_average(self.do[window],mv), 'o-',color='r')
-        plt.plot(self.d_dt[window], self.do[window], 'o-', color='r')
-        # plt.scatter(self.d_dt[window],self.do[window], color='r')
+        plt.plot(self.d_dt, self.do, 'o-', color='r')
         plt.ylabel('Dissolved Oxygen (%)', fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.subplot(1,2,2)
-        # plt.plot(self.d_dt[window], moving_average(self.temp[window],mv), 'o-',color= 'c')
-        plt.plot(self.d_dt[window], self.temp[window], 'o-',color= 'c')
+        plt.plot(self.d_dt, self.temp, 'o-',color= 'c')
         plt.ylabel("Water temperature (°F)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)

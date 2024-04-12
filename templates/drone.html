@@ -3,7 +3,7 @@
 {% block head %}
 
 <title>Drone</title>
-<link rel="stylesheet" href="/static/css/sensors.css">
+<link rel="stylesheet" href="/static/css/drone.css">
 
 {% endblock %}
 
@@ -45,36 +45,97 @@
     updateData()
     setInterval(updateData, 2000);
   </script>
+
   <h2>{{ id }}</h2>
-  <ul> 
-    <br>
-    <li><span id="msg"></span></li>
-    <br>
-    <h2>Flight Information</h2>
-    <li>mode:        <span id="flight_mode"></span></li>
-    <li>arm state:   <span id="arm_state"></span></li>
-    <li>on water:    <span id="on_water"></span></li>
-    <li>flight time: <span id="flight_time_mins"></span>:<span id="flight_time_secs"></span> (mins:secs)</li>
-    <br>
-    <h2>Position Information</h2>
-    <li>velocity: <span id="vel"></span> m/s</li>
-    <li>altitude: <span id="alt"></span> m</li>
-    <li>latitude: <span id="lat"></span></li>
-    <li>longitude: <span id="lon"></span></li>
-    <li>heading: <span id="hdg"></span> deg</li>
-    <li>last update: <span id="GLOBAL_POSITION_INT"></span> s</li>
-    <br>
-    <h2>Vehicle Health</h2>
-    <li>battery voltage: <span id="voltage"></span></li>
-    <li>battery current: <span id="current"></span></li>
-    <li>last update: <span id="BATTERY_STATUS"></span> s</li>
-    <br>
-    <h2>Payload</h2>
-    <li>DO: <span id="p_DO"></span> mV</li>
-    <li>pressure: <span id="p_pres"></span> hPa</li>
-    <li>temperature: <span id="p_temp"></span> c</li>
-    <li>last update: <span id="NAMED_VALUE_FLOAT"></span> s</li>
-  </ul>
+  <div class="row">
+    <div class="column">
+      <h2>Flight Information</h2>
+      <table class="table">
+        <tr>
+          <td>mode</td>
+          <td><span id="flight_mode"></span></td>
+        </tr>
+        <tr>
+          <td>arm state</td>
+          <td><span id="arm_state"></span></td>
+        </tr>
+        <tr>
+          <td>on water</td>
+          <td><span id="on_water"></span></td>
+        </tr>
+        <tr>
+          <td>flight time</td>
+          <td><span id="flight_time_mins"></span>:<span id="flight_time_secs"></span></td>
+        </tr>
+      </table>
+      <h2>Position Information</h2>
+      <table class="table">
+        <tr>
+          <td>velocity</td>
+          <td><span id="vel"></span></td>
+        </tr>
+        <tr>
+          <td>altitude</td>
+          <td><span id="alt"></span></td>
+        </tr>
+        <tr>
+          <td>latitude</td>
+          <td><span id="lat"></span></td>
+        </tr>
+        <tr>
+          <td>longitude</td>
+          <td><span id="lon"></span></td>
+        </tr>
+        <tr>
+          <td>heading</td>
+          <td><span id="hdg"></span></td>
+        </tr>
+        <tr>
+          <td>last update</td>
+          <td><span id="GLOBAL_POSITION_INT"></span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="column">
+      <h2>Vehicle Health</h2>
+      <table class="table">
+        <tr>
+          <td>battery voltage</td>
+          <td><span id="voltage"></span></td>
+        </tr>
+        <tr>
+          <td>battery current</td>
+          <td><span id="current"></span></td>
+        </tr>
+        <tr>
+          <td>last update</td>
+          <td><span id="BATTERY_STATUS"></span></td>
+        </tr>
+      </table>
+      <h2>Payload</h2>
+      <table class="table">
+        <tr>
+          <td>DO</td>
+          <td><span id="p_DO"></span></td>
+        </tr>
+        <tr>
+          <td>pressure</td>
+          <td><span id="p_pres"></span></td>
+        </tr>
+        <tr>
+          <td>temperature</td>
+          <td><span id="p_temp"></span></td>
+        </tr>
+        <tr>
+          <td>last update</td>
+          <td><span id="NAMED_VALUE_FLOAT"></span></td>
+        </tr>
+      </table>
+      <h2>Messages</h2>
+      <span id="msg"></span>
+    </div>  
+  </div>
 </body>
 
 {% endblock %}
