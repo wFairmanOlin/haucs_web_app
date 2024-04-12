@@ -11,6 +11,20 @@
 
 <body class="sensor-body">
   <script>
+    function formattedSeconds(seconds){
+      let mins = Math.floor(seconds / 60);
+      let secs = seconds - mins * 60;
+      let smins = mins.toString();
+      let ssecs = secs.toString();
+      if (mins < 10) {
+        smins = "0" + smins;
+      }
+      if (secs < 10) {
+        ssecs = "0" + ssecs;
+      }
+      return [smins, ssecs];
+    }
+    
     function updateData(){
       fetch('/data/LH_Farm drone ' + "{{ id }}")
         .then(response => response.json())
@@ -34,11 +48,15 @@
             document.getElementById('p_pres').textContent = json.data.p_pres;
             document.getElementById('p_temp').textContent = json.data.p_temp;
             //convert time to min:sec
-            let ftime = parseInt(json.data.flight_time);
-            let fmins = Math.floor(ftime / 60);
-            let fsecs = ftime - fmins * 60;
+            var [fmins, fsecs] = formattedSeconds((json.data.flight_time));
+            var [bmins, bsecs] = formattedSeconds((json.data.battery_time));
+            var [mmins, msecs] = formattedSeconds((json.data.mission_time));
             document.getElementById('flight_time_mins').textContent = fmins;
             document.getElementById('flight_time_secs').textContent = fsecs;
+            document.getElementById('battery_time_mins').textContent = bmins;
+            document.getElementById('battery_time_secs').textContent = bsecs;
+            document.getElementById('mission_time_mins').textContent = mmins;
+            document.getElementById('mission_time_secs').textContent = msecs;
           }
         })
     }
@@ -64,18 +82,26 @@
           <td><span id="on_water"></span></td>
         </tr>
         <tr>
+          <td>mission time (mm:ss)</td>
+          <td><span id="mission_time_mins"></span>:<span id="mission_time_secs"></span></td>
+        </tr>
+        <tr>
           <td>flight time</td>
           <td><span id="flight_time_mins"></span>:<span id="flight_time_secs"></span></td>
+        </tr>
+        <tr>
+          <td>total flight time</td>
+          <td><span id="battery_time_mins"></span>:<span id="battery_time_secs"></span></td>
         </tr>
       </table>
       <h2>Position Information</h2>
       <table class="table">
         <tr>
-          <td>velocity</td>
+          <td>velocity (m/s)</td>
           <td><span id="vel"></span></td>
         </tr>
         <tr>
-          <td>altitude</td>
+          <td>altitude (m)</td>
           <td><span id="alt"></span></td>
         </tr>
         <tr>
@@ -91,7 +117,7 @@
           <td><span id="hdg"></span></td>
         </tr>
         <tr>
-          <td>last update</td>
+          <td>last update (s)</td>
           <td><span id="GLOBAL_POSITION_INT"></span></td>
         </tr>
       </table>
@@ -101,34 +127,34 @@
       <h2>Vehicle Health</h2>
       <table class="table">
         <tr>
-          <td>battery voltage</td>
+          <td>battery voltage (V)</td>
           <td><span id="voltage"></span></td>
         </tr>
         <tr>
-          <td>battery current</td>
+          <td>battery current (A)</td>
           <td><span id="current"></span></td>
         </tr>
         <tr>
-          <td>last update</td>
+          <td>last update (s)</td>
           <td><span id="BATTERY_STATUS"></span></td>
         </tr>
       </table>
       <h2>Payload</h2>
       <table class="table">
         <tr>
-          <td>DO</td>
+          <td>DO (V)</td>
           <td><span id="p_DO"></span></td>
         </tr>
         <tr>
-          <td>pressure</td>
+          <td>pressure (hPa)</td>
           <td><span id="p_pres"></span></td>
         </tr>
         <tr>
-          <td>temperature</td>
+          <td>temperature (C)</td>
           <td><span id="p_temp"></span></td>
         </tr>
         <tr>
-          <td>last update</td>
+          <td>last update (s)</td>
           <td><span id="NAMED_VALUE_FLOAT"></span></td>
         </tr>
       </table>
