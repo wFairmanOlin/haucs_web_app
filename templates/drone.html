@@ -64,99 +64,104 @@
     setInterval(updateData, 2000);
   </script>
 
-  <h2>{{ id }}</h2>
+  <h2 style="text-align: center">{{ id }}</h2>
   <div class="row">
     <div class="column">
-      <h2>Flight Information</h2>
       <table class="table">
-        <tr>
-          <td>mode</td>
-          <td><span id="flight_mode"></span></td>
-        </tr>
-        <tr>
-          <td>arm state</td>
-          <td><span id="arm_state"></span></td>
-        </tr>
-        <tr>
-          <td>on water</td>
-          <td><span id="on_water"></span></td>
-        </tr>
-        <tr>
-          <td>mission time (mm:ss)</td>
-          <td><span id="mission_time_mins"></span>:<span id="mission_time_secs"></span></td>
-        </tr>
-        <tr>
-          <td>flight time</td>
-          <td><span id="flight_time_mins"></span>:<span id="flight_time_secs"></span></td>
-        </tr>
-        <tr>
-          <td>total flight time</td>
-          <td><span id="battery_time_mins"></span>:<span id="battery_time_secs"></span></td>
-        </tr>
-      </table>
-      <h2>Position Information</h2>
-      <table class="table">
-        <tr>
-          <td>velocity (m/s)</td>
-          <td><span id="vel"></span></td>
-        </tr>
-        <tr>
-          <td>altitude (m)</td>
-          <td><span id="alt"></span></td>
-        </tr>
-        <tr>
-          <td>latitude</td>
-          <td><span id="lat"></span></td>
-        </tr>
-        <tr>
-          <td>longitude</td>
-          <td><span id="lon"></span></td>
-        </tr>
-        <tr>
-          <td>heading</td>
-          <td><span id="hdg"></span></td>
-        </tr>
-        <tr>
-          <td>last update (s)</td>
-          <td><span id="GLOBAL_POSITION_INT"></span></td>
-        </tr>
+        <tbody>
+          <th scope="rowgroup"><h2>Flight Information</h2></th>
+          <tr>
+            <td>mode</td>
+            <td><span id="flight_mode"></span></td>
+          </tr>
+          <tr>
+            <td>arm state</td>
+            <td><span id="arm_state"></span></td>
+          </tr>
+          <tr>
+            <td>on water</td>
+            <td><span id="on_water"></span></td>
+          </tr>
+          <tr>
+            <td>mission time (mm:ss)</td>
+            <td><span id="mission_time_mins"></span>:<span id="mission_time_secs"></span></td>
+          </tr>
+          <tr>
+            <td>flight time</td>
+            <td><span id="flight_time_mins"></span>:<span id="flight_time_secs"></span></td>
+          </tr>
+          <tr>
+            <td>total flight time</td>
+            <td><span id="battery_time_mins"></span>:<span id="battery_time_secs"></span></td>
+          </tr>
+        </tbody>
+        
+        <tbody>
+          <th scope="rowgroup"><h2>Position Information</h2></th>
+          <tr>
+            <td>velocity (m/s)</td>
+            <td><span id="vel"></span></td>
+          </tr>
+          <tr>
+            <td>altitude (m)</td>
+            <td><span id="alt"></span></td>
+          </tr>
+          <tr>
+            <td>latitude</td>
+            <td><span id="lat"></span></td>
+          </tr>
+          <tr>
+            <td>longitude</td>
+            <td><span id="lon"></span></td>
+          </tr>
+          <tr>
+            <td>heading</td>
+            <td><span id="hdg"></span></td>
+          </tr>
+          <tr>
+            <td>last update (s)</td>
+            <td><span id="GLOBAL_POSITION_INT"></span></td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
     <div class="column">
-      <h2>Vehicle Health</h2>
       <table class="table">
-        <tr>
-          <td>battery voltage (V)</td>
-          <td><span id="voltage"></span></td>
-        </tr>
-        <tr>
-          <td>battery current (A)</td>
-          <td><span id="current"></span></td>
-        </tr>
-        <tr>
-          <td>last update (s)</td>
-          <td><span id="BATTERY_STATUS"></span></td>
-        </tr>
-      </table>
-      <h2>Payload</h2>
-      <table class="table">
-        <tr>
-          <td>DO (V)</td>
-          <td><span id="p_DO"></span></td>
-        </tr>
-        <tr>
-          <td>pressure (hPa)</td>
-          <td><span id="p_pres"></span></td>
-        </tr>
-        <tr>
-          <td>temperature (C)</td>
-          <td><span id="p_temp"></span></td>
-        </tr>
-        <tr>
-          <td>last update (s)</td>
-          <td><span id="NAMED_VALUE_FLOAT"></span></td>
-        </tr>
+        <tbody>
+          <th scope="rowgroup"><h2>Vehicle Health</h2></th>
+          <tr>
+            <td>battery voltage (V)</td>
+            <td><span id="voltage"></span></td>
+          </tr>
+          <tr>
+            <td>battery current (A)</td>
+            <td><span id="current"></span></td>
+          </tr>
+          <tr>
+            <td>last update (s)</td>
+            <td><span id="BATTERY_STATUS"></span></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <th scope="rowgroup"><h2>Payload</h2></th>
+          <tr>
+            <td>DO (V)</td>
+            <td><span id="p_DO"></span></td>
+          </tr>
+          <tr>
+            <td>pressure (hPa)</td>
+            <td><span id="p_pres"></span></td>
+          </tr>
+          <tr>
+            <td>temperature (C)</td>
+            <td><span id="p_temp"></span></td>
+          </tr>
+          <tr>
+            <td>last update (s)</td>
+            <td><span id="NAMED_VALUE_FLOAT"></span></td>
+          </tr>
+        </tbody>
       </table>
       <h2>Messages</h2>
       <span id="msg"></span>
