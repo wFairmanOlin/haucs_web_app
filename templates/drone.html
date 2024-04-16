@@ -39,11 +39,11 @@
             document.getElementById('lat').textContent = json.data.lat;
             document.getElementById('lon').textContent = json.data.lon;
             document.getElementById('hdg').textContent = json.data.hdg;
-            document.getElementById('GLOBAL_POSITION_INT').textContent = json.time.GLOBAL_POSITION_INT;
+            document.getElementById('GLOBAL_POSITION_INT').textContent = json.data.timers.GLOBAL_POSITION_INT;
             document.getElementById('voltage').textContent = json.data.voltage;
             document.getElementById('current').textContent = json.data.current;
-            document.getElementById('BATTERY_STATUS').textContent = json.time.BATTERY_STATUS;
-            document.getElementById('NAMED_VALUE_FLOAT').textContent = json.time.NAMED_VALUE_FLOAT;
+            document.getElementById('BATTERY_STATUS').textContent = json.data.timers.BATTERY_STATUS;
+            document.getElementById('NAMED_VALUE_FLOAT').textContent = json.data.timers.NAMED_VALUE_FLOAT;
             document.getElementById('p_DO').textContent = json.data.p_DO;
             document.getElementById('p_pres').textContent = json.data.p_pres;
             document.getElementById('p_temp').textContent = json.data.p_temp;
