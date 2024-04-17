@@ -25,7 +25,7 @@
   <h2 style="text-align: center">{{ id }}</h2>
   <div class="row">
     <div class="column1">
-      <h3><span id='GCS_HBEAT'></span></h3>
+      <h2><span id='GCS_HBEAT'></span></h2>
       <table class="table">
         <tbody>
           <th scope="rowgroup"><h2>Flight Overview</h2></th>
@@ -90,14 +90,26 @@
         <tbody>
           <th scope="rowgroup"><h2>Battery Status</h2></th>
           <tr>
-            <td>battery voltage (V)</td>
+            <td>voltage (V)</td>
             <td><span id="voltage"></span></td>
           </tr>
           <tr>
-            <td>battery current (A)</td>
+            <td>current (A)</td>
             <td><span id="current"></span></td>
           </tr>
           <tr>
+            <td>current consumed (mAh)</td>
+            <td><span id="mah_consumed"></span></td>
+          </tr>
+          <tr>
+            <td>battery remaining</td>
+            <td><span id="battery_remaining"></span>%</td>
+          </tr>
+          <tr>
+          <tr>
+            <td>time remaining (s)</td>
+            <td><span id="time_remaining"></span></td>
+          </tr>
             <td>last update (s)</td>
             <td><span id="BATTERY_STATUS"></span></td>
           </tr>

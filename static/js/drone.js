@@ -1,15 +1,15 @@
 let map;
 
-// var centerX = [27.535378, 37.7045823];
-// var centerY = [-80.351586, -89.4585105];
+var centerX = [27.535378, 37.7045823];
+var centerY = [-80.351586, -89.4585105];
 var zoomMap = 19;
-var droneSize = 25;
+var droneSize = 44;
 
 var list_pos = [];
 var cur_i = -1;
 var missions = [];
-var solidLine, dashedLine;
-var drone_pos = new google.maps.LatLng(0,0);
+var solidLine, droneLine;
+var drone_pos = new google.maps.LatLng(centerX[0],centerY[0]);
 var arming = true;
 
 function formattedTime(seconds){
@@ -100,7 +100,9 @@ function updateData(){
             if (!arePositionsEqual(drone_pos, dp)){
                 drone_pos = dp;
                 list_pos.push(drone_pos);
-                console.log("new_pos");
+                if (list_pos.length > 30){
+                    list_pos.shift();
+                }
             }
             // UPDATE MAP WITH NEW MISSION & POS
             updatemap();
@@ -125,27 +127,14 @@ function myMap() {
     };
     map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-    list_pos.push(mapProp.center);
-    // var levelZoom = 20 - map.getZoom();
-    // levelZoom = Math.pow(2, levelZoom);
 
-    var dashedLineSymbol = {
-        path: 'M 0,-1 0,1',
-        strokeColor: '#0000FF', // gray color
-        strokeOpacity: 1,
+    droneLine = new google.maps.Polyline({
+        path: list_pos,  // This is your array of google.maps.LatLng objects
+        geodesic: true,  // If you want the shortest path over the earth's surface
+        strokeColor: '#FF5500',  // Any color you want for the line
+        strokeOpacity: 1.0,
         strokeWeight: 2,
-        scale: 5
-    };
-
-    dashedLine = new google.maps.Polyline({
-        path: list_pos,
-        strokeOpacity: 0,
-        icons: [{
-            icon: dashedLineSymbol,
-            offset: '0',
-            repeat: '20px'
-        }],
-        map: map
+        map: map,
     });
 
     drone = new google.maps.Marker({
@@ -165,7 +154,7 @@ function myMap() {
     solidLine = new google.maps.Polyline({
         path: missions,  // This is your array of google.maps.LatLng objects
         geodesic: true,  // If you want the shortest path over the earth's surface
-        strokeColor: '#FF5500',  // Any color you want for the line
+        strokeColor: '#FFFF00',  // Any color you want for the line
         strokeOpacity: 1.0,
         strokeWeight: 2,
         icons: [{
@@ -237,8 +226,9 @@ function calculateDistance(pos1, pos2) {
 function updatemap(){
     solidLine.setPath(missions);
     drone.setPosition(drone_pos);
+        
     if (list_pos.length > 0){
-        dashedLine.setPath(list_pos);
+        droneLine.setPath(list_pos);
     }
     
     if (map){
