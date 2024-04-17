@@ -4,72 +4,31 @@
 
 <title>Drone</title>
 <link rel="stylesheet" href="/static/css/drone.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="{{ url_for('static', filename='js/drone.js') }}"></script>
+
+<script>
+  const drone_id = {{ id|tojson }};
+  window.onload = function(){
+    document.getElementById('GCS_HBEAT').value = 0;
+    updateData();
+    setInterval(updateData, 2000);
+    loadMap();
+  }
+</script>
 
 {% endblock %}
 
 {% block body %}
 
 <body class="sensor-body">
-  <script>
-    function formattedSeconds(seconds){
-      let mins = Math.floor(seconds / 60);
-      let secs = seconds - mins * 60;
-      let smins = mins.toString();
-      let ssecs = secs.toString();
-      if (mins < 10) {
-        smins = "0" + smins;
-      }
-      if (secs < 10) {
-        ssecs = "0" + ssecs;
-      }
-      return [smins, ssecs];
-    }
-    
-    function updateData(){
-      fetch('/data/LH_Farm drone ' + "{{ id }}")
-        .then(response => response.json())
-        .then(json => {
-          if (json) {
-            document.getElementById('msg').textContent = json.data.msg;
-            document.getElementById('flight_mode').textContent = json.data.flight_mode;
-            document.getElementById('arm_state').textContent = json.data.arm_state;
-            document.getElementById('on_water').textContent = json.data.on_water;
-            document.getElementById('vel').textContent = json.data.vel;
-            document.getElementById('alt').textContent = json.data.alt;
-            document.getElementById('lat').textContent = json.data.lat;
-            document.getElementById('lon').textContent = json.data.lon;
-            document.getElementById('hdg').textContent = json.data.hdg;
-            document.getElementById('GLOBAL_POSITION_INT').textContent = json.data.timers.GLOBAL_POSITION_INT;
-            document.getElementById('voltage').textContent = json.data.voltage;
-            document.getElementById('current').textContent = json.data.current;
-            document.getElementById('BATTERY_STATUS').textContent = json.data.timers.BATTERY_STATUS;
-            document.getElementById('NAMED_VALUE_FLOAT').textContent = json.data.timers.NAMED_VALUE_FLOAT;
-            document.getElementById('p_DO').textContent = json.data.p_DO;
-            document.getElementById('p_pres').textContent = json.data.p_pres;
-            document.getElementById('p_temp').textContent = json.data.p_temp;
-            //convert time to min:sec
-            var [fmins, fsecs] = formattedSeconds((json.data.flight_time));
-            var [bmins, bsecs] = formattedSeconds((json.data.battery_time));
-            var [mmins, msecs] = formattedSeconds((json.data.mission_time));
-            document.getElementById('flight_time_mins').textContent = fmins;
-            document.getElementById('flight_time_secs').textContent = fsecs;
-            document.getElementById('battery_time_mins').textContent = bmins;
-            document.getElementById('battery_time_secs').textContent = bsecs;
-            document.getElementById('mission_time_mins').textContent = mmins;
-            document.getElementById('mission_time_secs').textContent = msecs;
-          }
-        })
-    }
-    updateData()
-    setInterval(updateData, 2000);
-  </script>
-
   <h2 style="text-align: center">{{ id }}</h2>
   <div class="row">
-    <div class="column">
+    <div class="column1">
+      <h3><span id='GCS_HBEAT'></span></h3>
       <table class="table">
         <tbody>
-          <th scope="rowgroup"><h2>Flight Information</h2></th>
+          <th scope="rowgroup"><h2>Flight Overview</h2></th>
           <tr>
             <td>mode</td>
             <td><span id="flight_mode"></span></td>
@@ -84,20 +43,20 @@
           </tr>
           <tr>
             <td>mission time (mm:ss)</td>
-            <td><span id="mission_time_mins"></span>:<span id="mission_time_secs"></span></td>
+            <td><span id="mission_time"></span></td>
           </tr>
           <tr>
             <td>flight time</td>
-            <td><span id="flight_time_mins"></span>:<span id="flight_time_secs"></span></td>
+            <td><span id="flight_time"></span></td>
           </tr>
           <tr>
             <td>total flight time</td>
-            <td><span id="battery_time_mins"></span>:<span id="battery_time_secs"></span></td>
+            <td><span id="battery_time"></span></td>
           </tr>
         </tbody>
         
         <tbody>
-          <th scope="rowgroup"><h2>Position Information</h2></th>
+          <th scope="rowgroup"><h2>Position</h2></th>
           <tr>
             <td>velocity (m/s)</td>
             <td><span id="vel"></span></td>
@@ -126,10 +85,10 @@
       </table>
     </div>
 
-    <div class="column">
+    <div class="column1">
       <table class="table">
         <tbody>
-          <th scope="rowgroup"><h2>Vehicle Health</h2></th>
+          <th scope="rowgroup"><h2>Battery Status</h2></th>
           <tr>
             <td>battery voltage (V)</td>
             <td><span id="voltage"></span></td>
@@ -165,7 +124,11 @@
       </table>
       <h2>Messages</h2>
       <span id="msg"></span>
-    </div>  
+    </div> 
+
+    <div class="column2">
+      <div id="googleMap" style="width:100%;height:500px;"></div>
+  </div> 
   </div>
 </body>
 
