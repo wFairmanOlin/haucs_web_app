@@ -53,6 +53,12 @@ function msgColor(element){
     else
         element.style.color = 'black';
 }
+function timerColor(element){
+    if (element.textContent > 5)
+        element.style.color = 'red';
+    else
+        element.style.color = 'black';
+}
 function updateData(){
     fetch('/data/LH_Farm drone ' + drone_id)
         .then(response => response.json())
@@ -78,6 +84,7 @@ function updateData(){
             }
             else{
                 document.getElementById(key).textContent = json.data.timers[key];
+                timerColor(document.getElementById(key));
             }
             }
             // HANDLE COLOR CHANGES
