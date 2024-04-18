@@ -12,7 +12,7 @@
   window.onload = function(){
     document.getElementById('GCS_HBEAT').value = 0;
     updateData();
-    setInterval(updateData, 2000);
+    setInterval(updateData, 1000);
     loadMap();
   }
 </script>
@@ -88,7 +88,7 @@
     <div class="column1">
       <table class="table">
         <tbody>
-          <th scope="rowgroup"><h2>Battery Status</h2></th>
+          <th scope="rowgroup"><h2>Battery</h2></th>
           <tr>
             <td>voltage (V)</td>
             <td><span id="voltage"></span></td>
