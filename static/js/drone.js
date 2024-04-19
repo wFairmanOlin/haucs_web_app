@@ -40,7 +40,7 @@ function batteryColor(element){
         element.style.color = 'black';
 }
 function doColor(element){
-    if (element.textContent < 5)
+    if (element.textContent < 1)
         element.style.color = 'red';
     else
         element.style.color = 'black';
@@ -54,7 +54,7 @@ function msgColor(element){
         element.style.color = 'black';
 }
 function timerColor(element){
-    if (element.textContent > 5)
+    if (element.value > 5)
         element.style.color = 'red';
     else
         element.style.color = 'black';
@@ -77,17 +77,19 @@ function updateData(){
             }
             }
             //handle timers
-            for (var key in json.data.timers){
-            if (key == 'GCS_HBEAT'){
-                var oldGCS = document.getElementById(key).value; 
-                document.getElementById(key).value = json.data.timers.GCS_HBEAT;
-            }
-            else{
-                document.getElementById(key).textContent = json.data.timers[key];
-                timerColor(document.getElementById(key));
-            }
-            }
+            var oldGCS = document.getElementById('GCS_HBEAT').value; 
+            document.getElementById('GCS_HBEAT').value = json.data.timers.GCS_HBEAT;
+            document.getElementById('GLOBAL_POSITION_INT').textContent = 'Position';
+            document.getElementById('GLOBAL_POSITION_INT').value = json.data.timers.GLOBAL_POSITION_INT;
+            document.getElementById('BATTERY_STATUS').textContent = 'Battery';
+            document.getElementById('BATTERY_STATUS').value = json.data.timers.BATTERY_STATUS;
+            document.getElementById('NAMED_VALUE_FLOAT').textContent = 'Payload';
+            document.getElementById('NAMED_VALUE_FLOAT').value = json.data.timers.NAMED_VALUE_FLOAT;
+            timerColor(document.getElementById('GLOBAL_POSITION_INT'));
+            timerColor(document.getElementById('BATTERY_STATUS'));
+            timerColor(document.getElementById('NAMED_VALUE_FLOAT'));
             // HANDLE COLOR CHANGES
+
             GCSColor(document.getElementById('GCS_HBEAT'), oldGCS, json.data.timers.GCS_HBEAT);
             batteryColor(document.getElementById('voltage'));
             doColor(document.getElementById('p_DO'));

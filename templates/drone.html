@@ -12,8 +12,31 @@
   window.onload = function(){
     document.getElementById('GCS_HBEAT').value = 0;
     updateData();
+    updateWeather();
     setInterval(updateData, 1000);
+    setInterval(updateWeather, 10000);
     loadMap();
+  }
+</script>
+
+<script>
+  function updateWeather(){
+    var d = new Date();
+    var milli = d.getTime();
+    fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_1/0?start=' 
+          + (milli - 6*100000) + '&end=' + milli)
+      .then(response => response.json())
+      .then(json => {
+      if (json) {
+        var idx = json.result.length - 1;
+        if (idx >= 0){
+          wind_dir = json.result[idx].readings[2];
+          wind_spd = json.result[idx].readings[3];
+          document.getElementById('wind_dir').textContent = wind_dir;
+          document.getElementById('wind_spd').textContent = wind_spd;
+        }
+      }
+    })
   }
 </script>
 
@@ -56,7 +79,7 @@
         </tbody>
         
         <tbody>
-          <th scope="rowgroup"><h2>Position</h2></th>
+          <th scope="rowgroup"><h2><span id='GLOBAL_POSITION_INT'></span></h2></th>
           <tr>
             <td>velocity (m/s)</td>
             <td><span id="vel"></span></td>
@@ -77,10 +100,6 @@
             <td>heading</td>
             <td><span id="hdg"></span></td>
           </tr>
-          <tr>
-            <td>last update (s)</td>
-            <td><span id="GLOBAL_POSITION_INT"></span></td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -88,7 +107,7 @@
     <div class="column1">
       <table class="table">
         <tbody>
-          <th scope="rowgroup"><h2>Battery</h2></th>
+          <th scope="rowgroup"><h2><span id='BATTERY_STATUS'></span></h2></th>
           <tr>
             <td>voltage (V)</td>
             <td><span id="voltage"></span></td>
@@ -109,13 +128,9 @@
           <tr>
             <td>time remaining (s)</td>
             <td><span id="time_remaining"></span></td>
-          </tr>
-            <td>last update (s)</td>
-            <td><span id="BATTERY_STATUS"></span></td>
-          </tr>
         </tbody>
         <tbody>
-          <th scope="rowgroup"><h2>Payload</h2></th>
+          <th scope="rowgroup"><h2><span id='NAMED_VALUE_FLOAT'></span></h2></th>
           <tr>
             <td>DO (V)</td>
             <td><span id="p_DO"></span></td>
@@ -128,9 +143,16 @@
             <td>temperature (C)</td>
             <td><span id="p_temp"></span></td>
           </tr>
+        </tbody>
+        <tbody>
+          <th scope="rowgroup"><h2>Weather</h2></th>
           <tr>
-            <td>last update (s)</td>
-            <td><span id="NAMED_VALUE_FLOAT"></span></td>
+            <td>Wind Direction</td>
+            <td><span id="wind_dir"></span></td>
+          </tr>
+          <tr>
+            <td>Wind Speed (m/s)</td>
+            <td><span id="wind_spd"></span></td>
           </tr>
         </tbody>
       </table>
