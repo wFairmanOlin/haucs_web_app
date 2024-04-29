@@ -11,7 +11,7 @@ var missions = [];
 var solidLine, droneLine;
 var drone_pos = new google.maps.LatLng(centerX[0],centerY[0]);
 var arming = true;
-var gcs_counter = 0;
+var gcs_counter = 3;
 
 function formattedTime(seconds){
     let mins = Math.floor(seconds / 60);
@@ -25,7 +25,7 @@ function formattedTime(seconds){
     return smins + ":" + ssecs;
 }
 function GCSColor(element, previous, current){
-    console.log(gcs_counter);
+    // console.log(gcs_counter);
     if (previous == current)
         gcs_counter += 1;
     else
