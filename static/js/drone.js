@@ -11,6 +11,7 @@ var missions = [];
 var solidLine, droneLine;
 var drone_pos = new google.maps.LatLng(centerX[0],centerY[0]);
 var arming = true;
+var gcs_counter = 0;
 
 function formattedTime(seconds){
     let mins = Math.floor(seconds / 60);
@@ -24,7 +25,13 @@ function formattedTime(seconds){
     return smins + ":" + ssecs;
 }
 function GCSColor(element, previous, current){
-    if (previous == current){
+    console.log(gcs_counter);
+    if (previous == current)
+        gcs_counter += 1;
+    else
+        gcs_counter = 0;
+
+    if (gcs_counter > 3){
         element.textContent= "GCS DISCONNECTED";
         element.style.color='red';
     }
@@ -32,6 +39,8 @@ function GCSColor(element, previous, current){
         element.textContent = "GCS CONNECTED";
         element.style.color='green';
     }
+    
+
 }
 function batteryColor(element){
     if (element.textContent < 14.7)
@@ -77,7 +86,7 @@ function updateData(){
             }
             }
             //handle timers
-            var oldGCS = document.getElementById('GCS_HBEAT').value; 
+            var oldGCS = document.getElementById('GCS_HBEAT').value;
             document.getElementById('GCS_HBEAT').value = json.data.timers.GCS_HBEAT;
             document.getElementById('GLOBAL_POSITION_INT').textContent = 'Position';
             document.getElementById('GLOBAL_POSITION_INT').value = json.data.timers.GLOBAL_POSITION_INT;
