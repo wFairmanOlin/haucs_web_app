@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from datetime import datetime
+from datetime import datetime, timedelta
 import firebase
 import json
 import os
@@ -144,12 +144,16 @@ def haucs():
 @app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
     pondx = firebase.pond(pond_id, 48)
-    last_do = round(pondx.do[-1],2)
-    last_temp = round(pondx.temp[-1],2)
-    last_dt = pondx.d_dt[-1]
+    last_do = 0
+    last_temp = 0
+    last_dt = datetime.now() - timedelta(days=30)
+    if (len(pondx.d_dt) > 0):
+        pondx.plot_temp_do(mv=10)
+        last_do = round(pondx.do[-1],2)
+        last_temp = round(pondx.temp[-1],2)
+        last_dt = pondx.d_dt[-1]
     str_date = last_dt.strftime('%A, %B %d')
     str_time = last_dt.strftime('%I:%M %p')
-    pondx.plot_temp_do(mv=10)
     return render_template('haucs_analytics.html', pond_id=pond_id, last_date=str_date, last_time = str_time,last_do=last_do, last_temp = last_temp)
 
 @app.route('/recent')

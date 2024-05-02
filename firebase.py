@@ -56,11 +56,10 @@ def to_datetime(dates, tz_aware=True):
         except:
             print(i)
         if tz_aware:
-            tz = pytz.timezone('US/Eastern')
-            # tz = pytz.timezone('UTC')
+            # tz = pytz.timezone('US/Eastern')
+            tz = pytz.timezone('UTC')
             i_dt = tz.localize(i_dt)
-            # dt.append(i_dt.astimezone(pytz.timezone('US/Eastern')))
-            dt.append(i_dt)
+            dt.append(i_dt.astimezone(pytz.timezone('US/Eastern')))
         else:
             dt.append(i_dt)
     return np.array(dt)  
@@ -216,50 +215,48 @@ class egg_sensor():
 class pond():
 
     def __init__(self, name, n):
+        start = (datetime.now() - timedelta(days=3)).astimezone(pytz.timezone("UTC")).strftime('%Y%m%d_%H:%M:%S')
+        end = datetime.now().astimezone(pytz.timezone("UTC")).strftime('%Y%m%d_%H:%M:%S')
         ref = db.reference('/LH_Farm/pond_' + str(name))
-        data = ref.order_by_key().limit_to_last(n).get()
-        final_pressure=[]
-        final_do = []
-        final_temp = []
-        init_do = []
-        lat = []
-        lng = []
-        for i in data:
-            if (data[i]['type'] == 'manual') and (len(final_do) != 0):
-                final_pressure.append('nan')
-                final_do.append(data[i]['do'])
-                final_temp.append('nan')
-                init_do.append('nan')
-                lat.append('nan')
-                lng.append('nan')
-            else:
-                pressure = data[i]['pressure']
-                do = data[i]['do']
-                temp = data[i]['temp']
-                initial_do = int(data[i]['init_do'])
-                if initial_do == 0:
-                    initial_do = 0.01
-                #find highest pressure
-                high_pressure = max(pressure)
-                index_hp = pressure.index(high_pressure)
-                high_pressure = float(high_pressure)
-                #append single value for do, temp, pressure @ high pressure
-                final_pressure.append(high_pressure)
-                final_do.append(int(do[index_hp]) / initial_do * 100)
-                final_temp.append(round(float(temp[index_hp]) * (9/5) + 32, 2))
-                #append other variables
-                init_do.append(initial_do)
-                lat.append(float(data[i]['lat']))
-                lng.append(float(data[i]['lng']))
-        
+        data = ref.order_by_key().start_at(start).end_at(end).get()
         self.d_dt = to_datetime(data)
-        self.init_do = np.array(init_do, dtype='float')
-        self.lat = np.array(lat, dtype='float')
-        self.lng = np.array(lng, dtype='float')
-        self.pressure = np.array(final_pressure, dtype='float')
-        self.do = np.array(final_do, dtype='float')
-        self.temp =np.array(final_temp, dtype='float')
-        self.id = str(name)
+        if (len(self.d_dt) > 0):
+            final_do = []
+            final_temp = []
+            init_do = []
+            lat = []
+            lng = []
+            for i in data:
+                if (data[i]['type'] == 'manual') and (len(final_do) != 0):
+                    final_do.append(data[i]['do'])
+                    final_temp.append('nan')
+                    init_do.append('nan')
+                    lat.append('nan')
+                    lng.append('nan')
+                else:
+                    pressure = data[i]['pressure']
+                    do = np.array(data[i]['do']).astype('float')
+                    temp = np.array(data[i]['temp']).astype('float')
+                    initial_do = int(data[i]['init_do'])
+                    if initial_do == 0:
+                        initial_do = 0.01
+
+                    #remove 0s from do
+                    do = do[do != 0]
+                    final_do.append(int(do.mean() / initial_do * 100))
+                    final_temp.append(round(temp.mean() * (9/5) + 32, 2))
+                    #append other variables
+                    init_do.append(initial_do)
+                    lat.append(float(data[i]['lat']))
+                    lng.append(float(data[i]['lng']))
+            
+            
+            self.init_do = np.array(init_do, dtype='float')
+            self.lat = np.array(lat, dtype='float')
+            self.lng = np.array(lng, dtype='float')
+            self.do = np.array(final_do, dtype='float')
+            self.temp =np.array(final_temp, dtype='float')
+            self.id = str(name)
 
     def plot_temp_do(self, mv):
         # Set date format for x-axis labels
