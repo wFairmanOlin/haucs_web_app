@@ -85,6 +85,17 @@ def data(ref):
     data = db.reference(db_path).get()
     return jsonify(data)
 
+'''
+Data Source: call this from javascript to get fresh data in given time range
+'''
+@app.route('/dataTime/' + '<ref>', methods=['GET'])
+def dataTime(ref):
+    variables = ref.split(' ')
+    db_path = "/".join(variables[:-2])
+    start = variables[-2]
+    end = variables[-1]
+    data = db.reference(db_path).order_by_key().start_at(start).end_at(end).get()
+    return jsonify(data)
 
 @app.route('/drone')
 def drone_list():
@@ -140,6 +151,13 @@ def haucs():
         data = file.read()
     
     return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
+
+@app.route('/history')
+def history():
+    with open('static/json/farm_features.json', 'r') as file:
+        data = file.read()
+    
+    return render_template('history.html', data=data)
 
 @app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
