@@ -73,8 +73,18 @@
             let end = getStartTime(0);
             const fetchPromises = jsonData.features.map(feature => {
                 const pondId = feature.properties.number;
-                return fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end)
+                if (feature.properties.number == ('bathymetry')){
+                    return fetch('/dataTime/LH_Farm bathymetry' + ' ' + start + ' ' + end)
                     .then(response => response.json());
+                }
+                else if (feature.properties.number == 'gps'){
+                    return fetch('/dataTime/LH_Farm gps' + ' ' + start + ' ' + end)
+                    .then(response => response.json());
+                }
+                else {
+                    return fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end)
+                        .then(response => response.json());
+                }
             });
 
             Promise.all(fetchPromises)
