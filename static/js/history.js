@@ -42,9 +42,9 @@ function generateTable(data) {
     data.forEach(item => {
         const row = tableBody.insertRow();
         const isRecent = moment(item.datetime).isAfter(now.subtract(60, 'seconds'));
-
+        // item.datetime.toIsoString().slice(0, 19).replace('T', ' ')
         row.innerHTML = `
-            <td>${item.datetime.toISOString().slice(0, 19).replace('T', ' ')}</td>
+            <td>${item.datetime.toISOString().slice(5, 10) + '-' + item.datetime.toLocaleTimeString()}</td>
             <td>${item.pond_id}</td>
             <td>${item.avg_do.toFixed(2)}</td>
             <td>${item.avg_temp.toFixed(2)}</td>
@@ -99,9 +99,12 @@ function transformData(jsonDatas, pondId) {
         Object.keys(jsonData).forEach(key => {
             const [date, time] = key.split('_');
             const year = date.substring(0, 4);
-            const month = date.substring(4, 6);
+            const month = date.substring(4, 6) - 1;
             const day = date.substring(6, 8);
-            const datetime = new Date(`${year}-${month}-${day}T${time}`);
+            const hour = time.substring(0, 2);
+            const min = time.substring(3, 5);
+            const sec = time.substring(7, 9);
+            const datetime = new Date(Date.UTC(year, month, day, hour, min, sec));
             const location = jsonData[key].lat + ", " + jsonData[key].lng;
 
             // Ensure `jsonData[key].do` is an array of floats

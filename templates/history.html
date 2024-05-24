@@ -25,11 +25,11 @@
         &nbsp;
         <label for="timePeriod" class="combobox-label">Time Period:</label>
         <select id="timePeriod" class="styled-combobox" onchange="fetchAndDisplayData()">
-            <option value=1 selected>1 Day</option>
-            <option value=3> 3 Days</option>
-            <option value=7>  7 Days</option>
-            <option value=30>30 Days</option>
-            <option value=90>90 Days</option>
+            <option value=6 selected>6 Hours</option>
+            <option value=24> 1 Day</option>
+            <option value=72> 3 Days</option>
+            <option value=168>  7 Days</option>
+            <option value=720>30 Days</option>
         </select>
     </div>
 
@@ -68,7 +68,7 @@
             const pondSelector = document.getElementById('pondSelector');
             const selectedPondId = pondSelector.value;
             //SET TIMESPAN
-            const timePeriod = document.getElementById('timePeriod').value * 24;
+            const timePeriod = document.getElementById('timePeriod').value;
             let start = getStartTime(timePeriod);
             let end = getStartTime(0);
             const fetchPromises = jsonData.features.map(feature => {
