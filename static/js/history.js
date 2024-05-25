@@ -41,7 +41,7 @@ function generateTable(data) {
 
     data.forEach(item => {
         const row = tableBody.insertRow();
-        const isRecent = moment(item.datetime).isAfter(now.subtract(60, 'seconds'));
+        // const isRecent = moment(item.datetime).isAfter(now.subtract(60, 'seconds'));
         // item.datetime.toIsoString().slice(0, 19).replace('T', ' ')
         row.innerHTML = `
             <td>${item.datetime.toISOString().slice(5, 10) + '-' + item.datetime.toLocaleTimeString()}</td>
@@ -53,9 +53,9 @@ function generateTable(data) {
             <td>${item.type}</td>
         `;
 
-        if (isRecent) {
-            row.style.color = 'red';
-        }
+        // if (isRecent) {
+        //     row.style.color = 'red';
+        // }
     });
 
     document.getElementById('pageInfo').innerText = `Page ${currentPage} of ${Math.ceil(paginatedData.length / rowsPerPage)}`;
@@ -103,7 +103,7 @@ function transformData(jsonDatas, pondId) {
             const day = date.substring(6, 8);
             const hour = time.substring(0, 2);
             const min = time.substring(3, 5);
-            const sec = time.substring(7, 9);
+            const sec = time.substring(6, 8);
             const datetime = new Date(Date.UTC(year, month, day, hour, min, sec));
             const location = jsonData[key].lat + ", " + jsonData[key].lng;
 
@@ -141,6 +141,12 @@ function transformData(jsonDatas, pondId) {
                 avg_temp: avg_temp,
                 type: jsonData[key].type,
             };
+            //TODO: temporary fix for GPS mode on Topside
+            if (entry['type'] == undefined){
+                entry['pond_id'] = 'gps';
+                entry['type'] = 'gps';
+            }
+            // console.log(entry);
             data.push(entry);
         });
     }
