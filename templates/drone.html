@@ -23,7 +23,7 @@
   function updateWeather(){
     var d = new Date();
     var milli = d.getTime();
-    fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_1/0?start=' 
+    fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' 
           + (milli - 6*100000) + '&end=' + milli)
       .then(response => response.json())
       .then(json => {
@@ -31,7 +31,7 @@
         var idx = json.result.length - 1;
         if (idx >= 0){
           wind_dir = json.result[idx].readings[2];
-          wind_spd = json.result[idx].readings[3];
+          wind_spd = json.result[idx].readings[5];
           document.getElementById('wind_dir').textContent = wind_dir;
           document.getElementById('wind_spd').textContent = wind_spd;
         }
