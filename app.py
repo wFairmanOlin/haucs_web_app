@@ -161,18 +161,20 @@ def history():
 
 @app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
-    pondx = firebase.pond(pond_id, 48)
+    days = 2
+    pondx = firebase.pond(pond_id, days)
     last_do = 0
+    last_do_mgl = 0
     last_temp = 0
-    last_dt = datetime.now() - timedelta(days=30)
+    str_date = f"NO DATA FROM PAST {days} DAYS"
     if (len(pondx.d_dt) > 0):
         pondx.plot_temp_do(mv=10)
         last_do = round(pondx.do[-1],2)
+        last_do_mgl = round(pondx.do_mgl[-1], 2)
         last_temp = round(pondx.temp[-1],2)
         last_dt = pondx.d_dt[-1]
-    str_date = last_dt.strftime('%A, %B %d')
-    str_time = last_dt.strftime('%I:%M %p')
-    return render_template('haucs_analytics.html', pond_id=pond_id, last_date=str_date, last_time = str_time,last_do=last_do, last_temp = last_temp)
+        str_date = last_dt.strftime('%m/%d %I:%M %p')
+    return render_template('haucs_analytics.html', pond_id=pond_id, last_date=str_date, last_do=last_do, last_do_mgl=last_do_mgl, last_temp=last_temp)
 
 @app.route('/recent')
 def recent():
