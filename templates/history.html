@@ -45,7 +45,7 @@
                 <tr>
                     <th>Time</th>
                     <th>Pond ID</th>
-                    <th>Dissolved Oxygen (%)</th>
+                    <th>DO (%)</th>
                     <th>Temperature (°F)</th>
                     <th>Pressure</th>
                     <th>Location</th>
@@ -101,7 +101,7 @@
         // Initialize the combobox and fetch datax
         initializeCombobox(jsonData, "all");
         fetchAndDisplayData();
-        setInterval(fetchAndDisplayData, 30000);
+        setInterval(fetchAndDisplayData, 60000);
         </script>
 </body>
 

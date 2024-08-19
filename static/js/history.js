@@ -111,8 +111,7 @@ function transformData(jsonDatas, pondId) {
             const doValues = Array.isArray(jsonData[key].do) 
                 ? jsonData[key].do.map(value => parseFloat(value)) 
                 : [parseFloat(jsonData[key].do)];
-            const halfDoValues = doValues.slice(Math.ceil(doValues.length / 2), doValues.length);
-            const avg_do = halfDoValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) * 100 / halfDoValues.length / jsonData[key].init_do;
+            const avg_do = doValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) * 100 / doValues.length / jsonData[key].init_do;
 
             const pressureValues = Array.isArray(jsonData[key].pressure) 
                 ? jsonData[key].pressure.map(value => parseFloat(value)) 
@@ -123,8 +122,7 @@ function transformData(jsonDatas, pondId) {
             const tempValues = Array.isArray(jsonData[key].temp) 
                 ? jsonData[key].temp.map(value => parseFloat(value)) 
                 : [parseFloat(jsonData[key].temp)];
-            const halfTempValues = tempValues.slice(Math.ceil(tempValues.length / 2), tempValues.length);
-            const avg_temp = 35 + 9 / 5 * halfTempValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) / halfTempValues.length;
+            const avg_temp = 35 + 9 / 5 * tempValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) / tempValues.length;
 
             const entry = {
                 datetime,

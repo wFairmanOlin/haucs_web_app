@@ -140,19 +140,15 @@ def haucs():
 
     last_do = dict()
     curr_time = datetime.now(timezone.utc)
-    print(curr_time)
+    scurrent = (curr_time - timedelta(days=1)).strftime('%Y%m%d_%H:%M:%S')
     for i in ponds['features']:
         pond_id = str(i['properties']['number'])
-        pdata = db.reference('LH_Farm/pond_' + pond_id).order_by_key().limit_to_last(1).get()
+        pdata = db.reference('LH_Farm/pond_' + pond_id).order_by_key().start_at(scurrent).limit_to_last(1).get()
         if pdata:
             for i in pdata:
                 do = np.array(pdata[i]['do']).astype('float')
-                dt = firebase.to_datetime([i], tz_aware="UTC")[0]
-                if curr_time - timedelta(days=1) > dt:
-                    last_do[pond_id] = -1
-                else:
-                    init_do = float(pdata[i]['init_do'])
-                    last_do[pond_id] = 100 * do[do > 0].mean() / init_do
+                init_do = float(pdata[i]['init_do'])
+                last_do[pond_id] = 100 * do[do > 0].mean() / init_do
         else:
             last_do[pond_id] = -1
 

@@ -172,7 +172,9 @@ class pond():
         plt.savefig("static/graphs/haucs/"+ str(self.id) + "_do_graph.png")
 
         plt.figure(figsize=(8, 5))
-        plt.plot(self.d_dt, self.temp, 'o-',color= 'c')
+        plt.scatter(self.d_dt[self.stype =='truck'], self.temp[self.stype =='truck'], color="b")
+        plt.scatter(self.d_dt[self.stype =='buoy'], self.temp[self.stype =='buoy'], color="g")
+        plt.plot(self.d_dt, moving_average(self.temp, mv), color="r", linewidth=3)
         plt.ylabel("Water temperature (°F)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
