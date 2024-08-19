@@ -1,9 +1,10 @@
 from flask import Flask, render_template, jsonify, request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import firebase
 import json
 import os
 from firebase_admin import db
+import numpy as np
 
 #create folder structure
 if not os.path.exists('static/graphs'):
@@ -41,20 +42,6 @@ def get_all_battv():
         last_battv[bmx.id] = bmx.battv[-1]
 
     return last_battv
-
-def get_all_do():
-    """
-    Get latest dissolved oxygen values for all ponds
-    """
-    last_do = dict()
-    data = db.reference('/LH_Farm/overview').get()
-
-    for i in data:
-        idx = i.split('_')[-1]
-        last_do[idx] = data[i]['last_do']
-
-    return last_do
-
 
 app = Flask(__name__)
 
@@ -146,10 +133,32 @@ def feedback():
 
 @app.route('/HAUCS')
 def haucs():
-    last_do = get_all_do()
+     
+    #get all ponds
+    with open('static/json/farm_features.json', 'r') as file:
+        ponds = json.load(file)
+
+    last_do = dict()
+    curr_time = datetime.now(timezone.utc)
+    print(curr_time)
+    for i in ponds['features']:
+        pond_id = str(i['properties']['number'])
+        pdata = db.reference('LH_Farm/pond_' + pond_id).order_by_key().limit_to_last(1).get()
+        if pdata:
+            for i in pdata:
+                do = np.array(pdata[i]['do']).astype('float')
+                dt = firebase.to_datetime([i], tz_aware="UTC")[0]
+                if curr_time - timedelta(days=1) > dt:
+                    last_do[pond_id] = -1
+                else:
+                    init_do = float(pdata[i]['init_do'])
+                    last_do[pond_id] = 100 * do[do > 0].mean() / init_do
+        else:
+            last_do[pond_id] = -1
+
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
-    
+
     return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
 
 @app.route('/history')
@@ -166,9 +175,9 @@ def show_pond(pond_id):
     last_do = 0
     last_do_mgl = 0
     last_temp = 0
-    str_date = f"NO DATA FROM PAST {days} DAYS"
+    str_date = f"NO RECENT DATA COLLECTED"
     if (len(pondx.d_dt) > 0):
-        pondx.plot_temp_do(mv=10)
+        pondx.plot_temp_do(mv=3)
         last_do = round(pondx.do[-1],2)
         last_do_mgl = round(pondx.do_mgl[-1], 2)
         last_temp = round(pondx.temp[-1],2)

@@ -37,12 +37,19 @@ def restart_firebase(app, key_dict):
 
 def moving_average(x, n):
     """
-    Simple moving average filter
+    Simple rolling average filter
     """
-    filter = np.ones(n) / n
-    return np.convolve(x, filter, 'valid')
+    output = np.zeros(x.size)
 
-def to_datetime(dates, tz_aware=True):
+    for i in range(x.size):
+        if i < n:
+            output[i] = x[0:i].mean()
+        else:
+            output[i] = x[i - n : i + 1].mean()
+
+    return output
+
+def to_datetime(dates, tz_aware="US/Central"):
     """
     Standardizes the various types of string datetime formats
     """
@@ -56,10 +63,9 @@ def to_datetime(dates, tz_aware=True):
         except:
             print(i)
         if tz_aware:
-            # tz = pytz.timezone('US/Eastern')
             tz = pytz.timezone('UTC')
             i_dt = tz.localize(i_dt)
-            dt.append(i_dt.astimezone(pytz.timezone('US/Eastern')))
+            dt.append(i_dt.astimezone(pytz.timezone('US/Central')))
         else:
             dt.append(i_dt)
     return np.array(dt)  
@@ -105,7 +111,9 @@ class pond():
             init_do = []
             lat = []
             lng = []
+            stype = []
             for i in data:
+                stype.append(data[i]['type'])
                 if (data[i]['type'] == 'manual') and (len(final_do) != 0):
                     final_do.append(data[i]['do'])
                     final_temp.append('nan')
@@ -124,7 +132,7 @@ class pond():
 
                     #remove 0s from do
                     do = do[do != 0]
-                    final_do.append(int(do.mean() / initial_do * 100))
+                    final_do.append(int(do[do > 0].mean() / initial_do * 100))
                     final_temp.append(round(temp.mean() * (9/5) + 32, 2))
                     final_pressure.append(np.mean(pressure))
                     #append other variables
@@ -141,16 +149,20 @@ class pond():
             self.temp_c = (self.temp - 32) * 5 / 9
             self.pressure = np.array(final_pressure, dtype='float')
             self.do_mgl = convert_to_mgl(self.do, self.temp_c, self.pressure)
+            self.stype = np.array(stype)
             self.id = str(name)
 
     def plot_temp_do(self, mv):
         # Set date format for x-axis labels
-        date_fmt = '%m-%d %H:%M'
+        date_fmt = '%m/%d %I %p'
         # Use DateFormatter to set the data to the correct format.
         date_formatter = mdates.DateFormatter(date_fmt, tz=(pytz.timezone("US/Central")))
         fig, ax1 = plt.subplots(figsize=(8, 5))
-        ax1.plot(self.d_dt, self.do_mgl, 'o-', color='r')
+        ax1.scatter(self.d_dt[self.stype =='truck'], self.do_mgl[self.stype =='truck'], color="b")
+        ax1.scatter(self.d_dt[self.stype =='buoy'], self.do_mgl[self.stype =='buoy'], color="g")
+        ax1.plot(self.d_dt, moving_average(self.do_mgl, mv), color="r", linewidth=3)
         ax1.set_ylabel('mg/l', fontsize=14)
+        ax1.legend(["truck", "buoy"])
         plt.title('Dissolved Oxygen')
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
@@ -158,6 +170,7 @@ class pond():
         ax2.set_ylim(self.do.min(), self.do.max())
         ax2.set_ylabel("% Saturation", fontsize=14)
         plt.savefig("static/graphs/haucs/"+ str(self.id) + "_do_graph.png")
+
         plt.figure(figsize=(8, 5))
         plt.plot(self.d_dt, self.temp, 'o-',color= 'c')
         plt.ylabel("Water temperature (°F)", fontsize=14)
@@ -193,7 +206,7 @@ class bmass_sensor():
         v = moving_average(self.v[window], mv)
 
         plt.figure()
-        plt.plot(self.d_dt[window][mv - 1 :], v, color='c')
+        plt.plot(self.d_dt[window], v, color='c')
         plt.ylabel("$\Delta $ Diode Voltage (V)", fontsize=14)
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
@@ -300,7 +313,7 @@ class egg_sensor():
 
         plt.figure()
         plt.scatter(dt, peaks, color='r')
-        plt.plot(dt[9:], moving_average(peaks, 10), color='orange', alpha=1)
+        plt.plot(dt, moving_average(peaks, 10), color='orange', alpha=1)
         plt.title('Turbidity Peak Detector')
         plt.ylabel("Number of Peaks")
         plt.gcf().autofmt_xdate()

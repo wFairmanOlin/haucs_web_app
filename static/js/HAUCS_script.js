@@ -2,20 +2,18 @@ let map;
 
 // Function that styles the boxes given their last voltage
 function boxStyle(pond_id, do_value) {
-  var mediumDO = 60;
-  var lowDO = 40;
+  var mediumDO = 80;
+  var lowDO = 60;
   let color = 'gray';
-
-    if (do_value<=lowDO){
-      color = 'red';
-    }
-
-    else if(do_value<=mediumDO){
-      color = 'orange';
-    }
-
-    else{
+    
+    if (do_value > mediumDO){
       color = "green";
+    }
+    else if (do_value > lowDO){
+      color = "orange";
+    }
+    else if (do_value > 0){
+      color = "red";
     }
 
     return color;
@@ -93,7 +91,7 @@ function initMap() {
   }
 
   // Call markers function
-  map_markers = createMarkers(status, marker_locations, marker_icon)
+  // map_markers = createMarkers(status, marker_locations, marker_icon)
 
   // Add listeners for user interaction
   map.data.addListener("click", (event) => {
@@ -103,6 +101,9 @@ function initMap() {
   map.data.addListener("mouseover", (event) => {
     map.data.revertStyle();
     map.data.overrideStyle(event.feature, { strokeWeight: 5 });
+    infowindow.setContent("pond " + event.feature.getProperty("number"))
+    infowindow.setPosition(event.latLng);
+    infowindow.open(map)
   });
 
   map.data.addListener("mouseout", (event) => {

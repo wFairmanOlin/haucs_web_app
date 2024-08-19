@@ -22,8 +22,7 @@
 {% block body %}
 
 <section class="content">
-    <h1>Pond Aquaculture</h1>
-    <p>Click on a pond to see the corresponding data:</p>
+    <p>Click on a pond to see data:</p>
     
 </section>
 
@@ -34,8 +33,7 @@
 <div class="legend">
   <h3>Legend:</h3>
   <ul>
-    <li><img src="/static/images/aerator_on.svg" alt=""> Aerator status on</li>
-    <li><img src="/static/images/aerator_off.svg" alt=""> Aerator status off</li>
+
     <li>
       <div class="circle" style="background: green;"></div>
       High Dissolved Oxygen Levels
@@ -50,8 +48,10 @@
     </li>
     <li>
       <div class="circle" style="background: grey;"></div>
-      No data available
+      No data collected recently
     </li>
+    <li><img src="/static/images/aerator_on.svg" alt=""> Aerator status on</li>
+    <li><img src="/static/images/aerator_off.svg" alt=""> Aerator status off</li>
 </div>
 
 <script
