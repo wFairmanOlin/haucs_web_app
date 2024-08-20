@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta, timezone
 import firebase
 import json
@@ -45,6 +46,26 @@ def get_all_battv():
 
 app = Flask(__name__)
 
+def update_overview():
+    #get all ponds
+    with open('static/json/farm_features.json', 'r') as file:
+        data = json.load(file)
+
+    pids = [str(i['properties']['number']) for i in data['features']]
+    last_do = dict()
+    curr_time = datetime.now(timezone.utc)
+    scurrent = (curr_time - timedelta(days=1)).strftime('%Y%m%d_%H:%M:%S')
+    for pid in pids:
+        pdata = db.reference('LH_Farm/pond_' + pid).order_by_key().start_at(scurrent).limit_to_last(1).get()
+        if pdata:
+            for i in pdata:
+                do = np.array(pdata[i]['do']).astype('float')
+                init_do = float(pdata[i]['init_do'])
+                last_do['pond_' + pid] = {'last_do': 100 * do[do > 0].mean() / init_do}
+        else:
+            last_do['pond_' + pid] = {'last_do': -1}
+    
+    db.reference("LH_Farm/overview").set(last_do)
 
 @app.route('/')
 def home():
@@ -134,27 +155,11 @@ def feedback():
 @app.route('/HAUCS')
 def haucs():
      
-    #get all ponds
-    with open('static/json/farm_features.json', 'r') as file:
-        ponds = json.load(file)
-
-    last_do = dict()
-    curr_time = datetime.now(timezone.utc)
-    scurrent = (curr_time - timedelta(days=1)).strftime('%Y%m%d_%H:%M:%S')
-    for i in ponds['features']:
-        pond_id = str(i['properties']['number'])
-        pdata = db.reference('LH_Farm/pond_' + pond_id).order_by_key().start_at(scurrent).limit_to_last(1).get()
-        if pdata:
-            for i in pdata:
-                do = np.array(pdata[i]['do']).astype('float')
-                init_do = float(pdata[i]['init_do'])
-                last_do[pond_id] = 100 * do[do > 0].mean() / init_do
-        else:
-            last_do[pond_id] = -1
+    last_do = db.reference('LH_Farm/overview').get()
 
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
-
+        
     return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
 
 @app.route('/history')
@@ -197,6 +202,9 @@ def show_sensor(sensor_id):
     return render_template('tanks_analytics.html', sensor_id=sensor_id, last_date=str_date, last_time = str_time, last_battv=last_battv, last_dt=last_dt)
 
 if __name__ == "__main__":
+    scheduler = APScheduler()
+    scheduler.add_job(func=update_overview, trigger='interval', id='job', seconds=60)
+    scheduler.start()
     if not deployed:
         app.run(debug=True)
 

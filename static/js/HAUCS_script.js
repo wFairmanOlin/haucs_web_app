@@ -38,7 +38,7 @@ function initMap() {
   // Call style function
   map.data.setStyle((feature) => {
     let pond_id = feature.getProperty('number');
-    let do_value = do_HAUCS[pond_id]
+    let do_value = do_HAUCS['pond_' + pond_id]['last_do'];
 
     color = boxStyle(pond_id, do_value)
    
@@ -101,13 +101,14 @@ function initMap() {
   map.data.addListener("mouseover", (event) => {
     map.data.revertStyle();
     map.data.overrideStyle(event.feature, { strokeWeight: 5 });
-    infowindow.setContent("pond " + event.feature.getProperty("number"))
+    infowindow.setContent("pond " + event.feature.getProperty("number"));
     infowindow.setPosition(event.latLng);
-    infowindow.open(map)
+    infowindow.open(map);
   });
 
   map.data.addListener("mouseout", (event) => {
     map.data.revertStyle();
+    infowindow.close(map);
   });
 
   }
