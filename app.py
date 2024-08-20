@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from flask_apscheduler import APScheduler
+# from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta, timezone
 import firebase
 import json
@@ -203,9 +203,9 @@ def show_sensor(sensor_id):
     return render_template('tanks_analytics.html', sensor_id=sensor_id, last_date=str_date, last_time = str_time, last_battv=last_battv, last_dt=last_dt)
 
 if __name__ == "__main__":
-    scheduler = APScheduler()
-    scheduler.add_job(func=update_overview, trigger='interval', id='job', seconds=60)
-    scheduler.start()
+    # scheduler = APScheduler()
+    # scheduler.add_job(func=update_overview, trigger='interval', id='job', seconds=60)
+    # scheduler.start()
     if not deployed:
         app.run(debug=True)
 
