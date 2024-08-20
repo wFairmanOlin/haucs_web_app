@@ -41,9 +41,9 @@ def moving_average(x, n):
     """
     output = np.zeros(x.size)
 
-    for i in range(1, x.size):
+    for i in range(x.size):
         if i < n:
-            output[i] = x[0:i].mean()
+            output[i] = x[0:i + 1].mean()
         else:
             output[i] = x[i - n : i + 1].mean()
 
