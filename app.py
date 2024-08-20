@@ -66,6 +66,7 @@ def update_overview():
             last_do['pond_' + pid] = {'last_do': -1}
     
     db.reference("LH_Farm/overview").set(last_do)
+    print("updated overview")
 
 @app.route('/')
 def home():
