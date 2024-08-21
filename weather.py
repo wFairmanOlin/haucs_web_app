@@ -12,7 +12,7 @@ import os
 matplotlib.use('agg')
 
 print(os.listdir())
-print(os.listdir('../'))
+print(os.listdir('static/'))
 duration = 2 #day
 start = str(round(time.time() * 1000) -  duration * 24 * 60 * 60  * 1000) #10 minutes
 end = str(round(time.time() * 1000))
@@ -45,7 +45,7 @@ if data['errorCode'] == 0:
     plt.ylabel("Air temperature (°F)", fontsize=12)
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_formatter(date_formatter)
-    plt.savefig("../static/graphs/haucs/weather_temp.png")
+    plt.savefig("static/graphs/haucs/weather_temp.png")
 
     plt.figure(figsize=(8,5))
     plt.subplot(2,1,1)
@@ -56,18 +56,18 @@ if data['errorCode'] == 0:
     plt.ylabel("Wind Dir. (deg)", fontsize=12)
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_formatter(date_formatter)
-    plt.savefig("../static/graphs/haucs/weather_wind.png")
+    plt.savefig("static/graphs/haucs/weather_wind.png")
 
     plt.figure(figsize=(8, 5))
     plt.plot(dt, rain, linewidth=3)
     plt.ylabel("Rain Intensity (mm/h)", fontsize=12)
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_formatter(date_formatter)
-    plt.savefig("../static/graphs/haucs/weather_rain.png")
+    plt.savefig("static/graphs/haucs/weather_rain.png")
 
     plt.figure(figsize=(8, 5))
     plt.plot(dt, solar_rad, linewidth=2)
     plt.ylabel("Solar Radiation (W/$m^2$)", fontsize=12)
     plt.gcf().autofmt_xdate()
     plt.gca().xaxis.set_major_formatter(date_formatter)
-    plt.savefig("../static/graphs/haucs/weather_solar.png")
+    plt.savefig("static/graphs/haucs/weather_solar.png")
