@@ -1,4 +1,5 @@
 
+print("before library")
 import urllib.request
 import json
 import time
@@ -9,18 +10,23 @@ from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
 import pytz
 
+print("starting")
 matplotlib.use('agg')
 
 duration = 2 #day
 start = str(round(time.time() * 1000) -  duration * 24 * 60 * 60  * 1000) #10 minutes
 end = str(round(time.time() * 1000))
 
+print("starting")
 # FETCH DATA
 with urllib.request.urlopen('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' + start + '&end=' + end) as response:
    data = json.load(response)
 
+print("fetched url")
 # CONVERT DATA
 if data['errorCode'] == 0:
+
+    print("plotting")
     dt = [datetime.fromtimestamp(i['time'] / 1000, timezone.utc) for i in data['result']]
     temp = [32 + (9 / 5 * i['readings'][7]) for i in data['result']]
     wind_dir = [i['readings'][2] for i in data['result']]
