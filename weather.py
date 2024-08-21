@@ -3,6 +3,7 @@ import urllib.request
 import json
 import time
 from datetime import datetime, timedelta, timezone
+import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
