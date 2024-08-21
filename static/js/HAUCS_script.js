@@ -103,6 +103,7 @@ function initMap() {
     map.data.overrideStyle(event.feature, { strokeWeight: 5 });
     infowindow.setContent("pond " + event.feature.getProperty("number"));
     infowindow.setPosition(event.latLng);
+    infowindow.setOptions({pixelOffset: new google.maps.Size(0,-10)});
     infowindow.open(map);
   });
 

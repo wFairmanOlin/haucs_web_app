@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+<title>Weather</title>
+
+<link rel="stylesheet" href="static/css/sensors.css">
+
+<script>
+    function updateWeather(){
+      var d = new Date();
+      var milli = d.getTime();
+      fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' 
+            + (milli - 6*100000) + '&end=' + milli)
+        .then(response => response.json())
+        .then(json => {
+        if (json) {
+          var idx = json.result.length - 1;
+          if (idx >= 0){
+            temp = Math.round(32 + (9 / 5 * json.result[idx].readings[7]));
+            wind_spd = json.result[idx].readings[5];
+            wind_dir = json.result[idx].readings[2];
+            document.getElementById('wind_dir').textContent = wind_dir;
+            document.getElementById('wind_spd').textContent = wind_spd;
+            document.getElementById('temp').textContent = temp;
+          }
+        }
+      })
+    }
+
+    window.onload = function(){
+    updateWeather();
+    }
+  </script>
+
+
+{% endblock %}
+
+{% block body %}
+
+<body class="sensor-body">
+
+    <div class="pond_number">
+        <h1>Local Weather Station</h1>
+    </div>
+
+    <div class="data_summary">
+        <li>Air temperature: <span id ='temp'></span> F</li>
+        <li>Wind Direction: <span id ='wind_dir'></span> Degrees</li>
+        <li>Wind speed: <span id='wind_spd'></span> (m/s)</li>
+        
+    </div>
+
+    <div class = "graph">
+        <img src="{{ url_for('static', filename='graphs/haucs/weather_temp.png')}}">
+    </div>
+    <div class = "graph">
+        <img src="{{ url_for('static', filename='graphs/haucs/weather_wind.png')}}">
+    </div>
+    <div class = "graph">
+        <img src="{{ url_for('static', filename='graphs/haucs/weather_rain.png')}}">
+    </div>
+    <div class = "graph">
+        <img src="{{ url_for('static', filename='graphs/haucs/weather_solar.png')}}">
+    </div>
+
+</body>
+
+{% endblock %}

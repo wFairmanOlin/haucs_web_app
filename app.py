@@ -202,6 +202,11 @@ def show_sensor(sensor_id):
     bmx.plot_timeseries(mv=10)
     return render_template('tanks_analytics.html', sensor_id=sensor_id, last_date=str_date, last_time = str_time, last_battv=last_battv, last_dt=last_dt)
 
+@app.route('/weather')
+def show_weather():
+    return render_template('weather.html')
+
+
 if __name__ == "__main__":
     # scheduler = APScheduler()
     # scheduler.add_job(func=update_overview, trigger='interval', id='job', seconds=60)
