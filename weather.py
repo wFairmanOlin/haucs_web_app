@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
 import pytz
 
+matplotlib.use('agg')
 
 duration = 2 #day
 start = str(round(time.time() * 1000) -  duration * 24 * 60 * 60  * 1000) #10 minutes
