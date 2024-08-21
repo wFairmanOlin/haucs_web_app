@@ -6,6 +6,7 @@ import json
 import os
 from firebase_admin import db
 import numpy as np
+import weather
 
 #create folder structure
 if not os.path.exists('static/graphs'):
@@ -204,6 +205,7 @@ def show_sensor(sensor_id):
 
 @app.route('/weather')
 def show_weather():
+    weather.generate_weather(2)
     return render_template('weather.html')
 
 
