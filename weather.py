@@ -11,6 +11,12 @@ import os
 
 matplotlib.use('agg')
 
+if not os.path.exists('static/graphs'):
+    os.mkdir('static/graphs')
+if not os.path.exists('static/graphs/haucs'):
+    os.mkdir('static/graphs/haucs')
+
+    
 print(os.listdir())
 print(os.listdir('static/'))
 duration = 2 #day
