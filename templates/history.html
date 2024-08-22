@@ -45,11 +45,12 @@
                 <tr>
                     <th>Time</th>
                     <th>Pond ID</th>
+                    <th>DO (mg/l)</th>
                     <th>DO (%)</th>
-                    <th>Temperature (°F)</th>
+                    <th>(°F)</th>
                     <th>Pressure</th>
                     <th>Location</th>
-                    <th>Device Type</th>
+                    <th>Type</th>
                 </tr>
             </thead>
             <tbody id="data-table-body">
@@ -101,7 +102,7 @@
         // Initialize the combobox and fetch datax
         initializeCombobox(jsonData, "all");
         fetchAndDisplayData();
-        setInterval(fetchAndDisplayData, 60000);
+        setInterval(fetchAndDisplayData, 30000);
         </script>
 </body>
 

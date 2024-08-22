@@ -1,3 +1,26 @@
+function convert_to_mgl(do_input, t, p, s){
+    //do: dissolved oxygen in percent saturation
+    //t: temperature in celcius
+    //p: pressure in hPa
+    //s: salinity in parts per thousand
+ 
+    T = t + 273.15; //temperature in kelvin
+    P = p * 9.869233e-4; //pressure in atm
+
+    DO_baseline = Math.exp(-139.34411 + 1.575701e5/T - 6.642308e7/Math.pow(T, 2) + 1.2438e10/Math.pow(T, 3) - 8.621949e11/Math.pow(T, 4));
+
+    Fs = Math.exp(-s * (0.017674 - 10.754/T + 2140.7/Math.pow(T, 2)));
+
+    theta = 0.000975 - 1.426e-5 * t + 6.436e-8 * Math.pow(t, 2);
+    u = Math.exp(11.8571 - 3840.7/T - 216961/Math.pow(T, 2));
+    Fp = (P - u) * (1 - theta * P) / (1 - u) / (1 - theta);
+
+    DO_corrected = DO_baseline * Fs * Fp;
+    DO_mgl = do_input / 100 * DO_corrected;
+
+    return DO_mgl;
+}
+
 function getStartTime(delta) {
     var start = new Date();
     start.setHours(start.getHours() - delta);
@@ -46,6 +69,7 @@ function generateTable(data) {
         row.innerHTML = `
             <td>${item.datetime.toISOString().slice(5, 10) + '-' + item.datetime.toLocaleTimeString()}</td>
             <td>${item.pond_id}</td>
+            <td>${item.do_mgl.toFixed(2)}</td>
             <td>${item.avg_do.toFixed(2)}</td>
             <td>${item.avg_temp.toFixed(2)}</td>
             <td>${item.avg_pressure.toFixed(2)}</td>
@@ -111,6 +135,7 @@ function transformData(jsonDatas, pondId) {
             const doValues = Array.isArray(jsonData[key].do) 
                 ? jsonData[key].do.map(value => parseFloat(value)) 
                 : [parseFloat(jsonData[key].do)];
+
             const avg_do = doValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) * 100 / doValues.length / jsonData[key].init_do;
 
             const pressureValues = Array.isArray(jsonData[key].pressure) 
@@ -122,12 +147,18 @@ function transformData(jsonDatas, pondId) {
             const tempValues = Array.isArray(jsonData[key].temp) 
                 ? jsonData[key].temp.map(value => parseFloat(value)) 
                 : [parseFloat(jsonData[key].temp)];
-            const avg_temp = 35 + 9 / 5 * tempValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) / tempValues.length;
+
+            const avg_temp_c = tempValues.reduce((sum, current) => sum + (isNaN(current) ? 0 : current), 0) / tempValues.length;
+
+            const avg_temp = 35 + 9 / 5 * avg_temp_c;
+
+            const do_mgl = convert_to_mgl(avg_do, avg_temp_c, avg_pressure, 0);
 
             const entry = {
                 datetime,
                 do: doValues,
                 avg_do: avg_do,
+                do_mgl:do_mgl,
                 drone_id: jsonData[key].drone_id,
                 init_do: jsonData[key].init_do,
                 init_pressure: jsonData[key].init_pressure,
