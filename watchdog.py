@@ -124,7 +124,6 @@ def check_ponds():
                 init_do = float(pdata[i]['init_do'])
                 do_level = 100 * do[do > 0].mean() / init_do
                 last_do['pond_' + pid] = {'last_do': do_level}
-                do_level = 40
                 #notifications
                 #only test data within past hour from buoys
                 if (i > hour_delay) and (pdata[i]['type'] == 'buoy'):
