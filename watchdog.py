@@ -6,10 +6,6 @@ import numpy as np
 from email.message import EmailMessage
 import pytz
 
-## USER PARAMETERS ##
-DO_ALERT_VALUE = 60
-
-
 fb_key = os.getenv('fb_key')
 
 if fb_key:
@@ -22,7 +18,6 @@ else:
 fb_app = firebase.login(fb_key)
 
 cred = db.reference('LH_Farm/email/credentials').get()
-
 ########## FUNCTIONS ################
 def convert_to_mgl(do, t, p, s=0):
     '''
@@ -76,7 +71,7 @@ def send_email(subject, body, recipient_list, pond_id=""):
 def check_trucks():
     do_send = False
     do_update = False
-    recipient_list = "test_notifications"
+    recipient_list = "truck_notifications"
     tbase_hbeat = db.reference("LH_Farm/equipment/truck_basestation").get()
     last_hbeat = time.time() - tbase_hbeat['time']
     #if updated within 30 minutes
@@ -103,7 +98,7 @@ def check_trucks():
         db.reference("LH_Farm/equipment/truck_basestation").set(tbase_hbeat)
 
 def check_ponds():
-    recipient_list = "test_notifications"
+    recipient_list = "buoy_notifications"
     with open('static/json/farm_features.json', 'r') as file:
         data = json.load(file)
 
@@ -129,19 +124,21 @@ def check_ponds():
                 if (i > hour_delay) and (pdata[i]['type'] == 'buoy'):
                     do_mgl = convert_to_mgl(do_level, np.mean(t), init_p)
                     pond_stats = db.reference('LH_Farm/overview/pond_' + pid).get()
+                    DO_ALERT_VALUE = db.reference('LH_Farm/email/do_alert').get()
+                    BUOY_ALERT_FREQUENCY = db.reference('LH_Farm/email/buoy_alert_frequency').get()
                     #create dictionary if new
                     if not pond_stats:
                         pond_stats = dict()
                     #get last notification time
                     last_message = pond_stats.get('last_notification')
                     if not last_message:
-                        last_message = time.time() - 60 * 60
+                        last_message = time.time() - BUOY_ALERT_FREQUENCY * 60
                     #send email if unmuted and 1 hour has passed
                     if not pond_stats.get('mute'):
                         if do_level < DO_ALERT_VALUE:
-                            if (time.time() - last_message) >= 60 * 60:
+                            if (time.time() - last_message) >= BUOY_ALERT_FREQUENCY * 60:
                                 pond_stats['last_notification'] = time.time()
-                                contents = f"LOW DO\nDO measured at {round(do_mgl, 2)}mg/l ({round(do_level)}%)\nthis is a watchdog bark"
+                                contents = f"DO measured at {round(do_mgl, 2)}mg/l ({round(do_level)}%)\nNABuoy {pdata[i]['sid']}"
                                 send_email(f"LOW DO POND {pid}", contents, recipient_list, pid)
                     pond_stats['last_do'] = do_level
                     last_do['pond_' + pid] = pond_stats
