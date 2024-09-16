@@ -29,6 +29,8 @@ def generate_weather(duration=2):
         wind_spd = [i['readings'][5] for i in data['result']]
         rain = [i['readings'][12] for i in data['result']]
         solar_rad = [i['readings'][18] for i in data['result']]
+        baro = [i['readings'][0] for i in data['result']]
+        rh = [i['readings'][9] for i in data['result']]
 
         date_fmt = '%m/%d %I %p'
         # Use DateFormatter to set the data to the correct format.
@@ -67,3 +69,17 @@ def generate_weather(duration=2):
         plt.gcf().autofmt_xdate()
         plt.gca().xaxis.set_major_formatter(date_formatter)
         plt.savefig("static/graphs/haucs/weather_solar.png")
+
+        plt.figure(figsize=(8, 5))
+        plt.plot(dt, baro, linewidth=2)
+        plt.ylabel("Barometric Pressure (hPa)", fontsize=12)
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/graphs/haucs/weather_baro.png")
+
+        plt.figure(figsize=(8, 5))
+        plt.plot(dt, rh, linewidth=2)
+        plt.ylabel("Relative Humiditiy (%)", fontsize=12)
+        plt.gcf().autofmt_xdate()
+        plt.gca().xaxis.set_major_formatter(date_formatter)
+        plt.savefig("static/graphs/haucs/weather_rh.png")
