@@ -46,7 +46,8 @@ def convert_to_mgl(do, t, p, s=0):
 def send_email(subject, body, recipient_list, pond_id=""):
 
     recipients = db.reference('LH_Farm/email/' +  recipient_list).get()
-
+    recipients = [i for i in recipients if i != None]
+    
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = cred['from']
