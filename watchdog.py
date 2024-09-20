@@ -10,12 +10,12 @@ fb_key = os.getenv('fb_key')
 
 if fb_key:
     deployed = True
+    global fb_app
+    fb_app = firebase.login(fb_key)
 else:
     deployed = False
     with open('fb_key.json', 'r') as file:
         fb_key = file.read()
-
-fb_app = firebase.login(fb_key)
 
 cred = db.reference('LH_Farm/email/credentials').get()
 ########## FUNCTIONS ################

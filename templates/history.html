@@ -25,7 +25,7 @@
         &nbsp;
         <label for="timePeriod" class="combobox-label">Time Period:</label>
         <select id="timePeriod" class="styled-combobox" onchange="fetchAndDisplayData()">
-            <option value=6 selected>6 Hours</option>
+            <option value=12 selected>12 Hours</option>
             <option value=24> 1 Day</option>
             <option value=72> 3 Days</option>
             <option value=168>  7 Days</option>
@@ -49,8 +49,8 @@
                     <th>DO (%)</th>
                     <th>(°F)</th>
                     <th>Pressure</th>
-                    <th>Location</th>
                     <th>Type</th>
+                    <th>Sensor ID</th>
                 </tr>
             </thead>
             <tbody id="data-table-body">
@@ -62,7 +62,7 @@
     <script>
         const jsonData = JSON.parse({{ data|tojson }});
         let currentPage = 1;
-        const rowsPerPage = 20;
+        const rowsPerPage = 40;
         let paginatedData = [];
     
         function fetchAndDisplayData() {
@@ -102,7 +102,7 @@
         // Initialize the combobox and fetch datax
         initializeCombobox(jsonData, "all");
         fetchAndDisplayData();
-        setInterval(fetchAndDisplayData, 30000);
+        setInterval(fetchAndDisplayData, 60000);
         </script>
 </body>
 

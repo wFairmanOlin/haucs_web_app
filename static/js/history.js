@@ -67,14 +67,14 @@ function generateTable(data) {
         // const isRecent = moment(item.datetime).isAfter(now.subtract(60, 'seconds'));
         // item.datetime.toIsoString().slice(0, 19).replace('T', ' ')
         row.innerHTML = `
-            <td>${item.datetime.toISOString().slice(5, 10) + '-' + item.datetime.toLocaleTimeString()}</td>
+            <td>${item.datetime.toLocaleTimeString("en-US", {month:"2-digit",day:"2-digit",hour:"2-digit", minute:"2-digit", timeZoneName: "short"})}</td>
             <td>${item.pond_id}</td>
             <td>${item.do_mgl.toFixed(2)}</td>
             <td>${item.avg_do.toFixed(2)}</td>
             <td>${item.avg_temp.toFixed(2)}</td>
             <td>${item.avg_pressure.toFixed(2)}</td>
-            <td>${item.location}</td>
             <td>${item.type}</td>
+            <td>${item.sensor_id}</td>
         `;
 
         // if (isRecent) {
@@ -130,7 +130,6 @@ function transformData(jsonDatas, pondId) {
             const sec = time.substring(6, 8);
             const datetime = new Date(Date.UTC(year, month, day, hour, min, sec));
             const location = jsonData[key].lat + ", " + jsonData[key].lng;
-
             // Ensure `jsonData[key].do` is an array of floats
             const doValues = Array.isArray(jsonData[key].do) 
                 ? jsonData[key].do.map(value => parseFloat(value)) 
@@ -169,6 +168,7 @@ function transformData(jsonDatas, pondId) {
                 temp: tempValues,
                 avg_temp: avg_temp,
                 type: jsonData[key].type,
+                sensor_id: jsonData[key].sid,
             };
             //TODO: temporary fix for GPS mode on Topside
             if (entry['type'] == undefined){

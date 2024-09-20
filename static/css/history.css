@@ -185,7 +185,7 @@ canvas {
 
 .data-table th, .data-table td {
     border: 1px solid #999;
-    padding: 8px;
+    padding: 4px;
     text-align: center;
     transition: background-color 0.3s ease; /* Smooth transition for hover effects */
 }
