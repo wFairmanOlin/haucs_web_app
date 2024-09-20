@@ -70,9 +70,9 @@ function generateTable(data) {
             <td>${item.datetime.toLocaleTimeString("en-US", {month:"2-digit",day:"2-digit",hour:"2-digit", minute:"2-digit", timeZoneName: "short"})}</td>
             <td>${item.pond_id}</td>
             <td>${item.do_mgl.toFixed(2)}</td>
-            <td>${item.avg_do.toFixed(2)}</td>
-            <td>${item.avg_temp.toFixed(2)}</td>
-            <td>${item.avg_pressure.toFixed(2)}</td>
+            <td>${item.avg_do.toFixed(1)}</td>
+            <td>${item.avg_temp.toFixed(1)}</td>
+            <td>${item.depth.toFixed(1)}</td>
             <td>${item.type}</td>
             <td>${item.sensor_id}</td>
         `;
@@ -153,6 +153,8 @@ function transformData(jsonDatas, pondId) {
 
             const do_mgl = convert_to_mgl(avg_do, avg_temp_c, avg_pressure, 0);
 
+            const depth = (avg_pressure - jsonData[key].init_pressure) / 2.491
+
             const entry = {
                 datetime,
                 do: doValues,
@@ -169,6 +171,7 @@ function transformData(jsonDatas, pondId) {
                 avg_temp: avg_temp,
                 type: jsonData[key].type,
                 sensor_id: jsonData[key].sid,
+                depth: depth,
             };
             //TODO: temporary fix for GPS mode on Topside
             if (entry['type'] == undefined){
