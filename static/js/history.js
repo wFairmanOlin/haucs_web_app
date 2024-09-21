@@ -46,7 +46,7 @@ function initializeCombobox(jsonData) {
     pondSelector.innerHTML = '<option value="all" selected>All Ponds</option>'; // Default option
 
     // Extract pond numbers and sort them
-    const pondNumbers = jsonData.features.map(feature => feature.properties.number).sort((a, b) => a - b);
+    const pondNumbers = jsonData.features.map(feature => feature.properties.number).sort();
 
     // Append sorted pond numbers to the combobox
     pondNumbers.forEach(pondId => {
