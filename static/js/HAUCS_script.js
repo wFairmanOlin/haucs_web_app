@@ -1,37 +1,23 @@
 let map;
 
-// Function that styles the boxes given their last voltage
-function boxStyle(pond_id, do_value) {
-  var mediumDO = 80;
-  var lowDO = 60;
-  let color = 'gray';
-    
-    if (do_value > mediumDO){
-      color = "green";
-    }
-    else if (do_value > lowDO){
-      color = "orange";
-    }
-    else if (do_value > 0){
-      color = "red";
-    }
-
-    return color;
-  }
-  
 // Function that initializes the map
-function initMap() {
+async function initMap() {
 
-  var map = new google.maps.Map(document.getElementById('map'), 
+  const { Map } = await google.maps.importLibrary("maps");
+
+  map = new Map(document.getElementById('map'), 
   {
     zoom: 16,
     center: { lat: 37.7037823, lng: -89.4648105 },
+    // tilt:45,
     mapTypeId: 'satellite',
+    // rotateControl: true,
+    // tiltControl: true,
     mapTypeControl: false,
     fullscreenControl: true,
-    streetViewControl: false
-  });
-
+    streetViewControl: false,
+    
+  }); 
   // Load GeoJSON.
   map.data.addGeoJson(geoFile_HAUCS);
 
@@ -47,7 +33,26 @@ function initMap() {
       strokeColor: color,
       strokeWeight: 2,
     };
-  });
+});
+
+  // Function that styles the boxes given their last voltage
+  function boxStyle(pond_id, do_value) {
+    var mediumDO = 80;
+    var lowDO = 60;
+    let color = 'gray';
+      
+      if (do_value > mediumDO){
+        color = "green";
+      }
+      else if (do_value > lowDO){
+        color = "orange";
+      }
+      else if (do_value > 0){
+        color = "red";
+      }
+
+      return color;
+  }  
 
   // Static aerators locations
   var marker_locations = [
@@ -112,6 +117,6 @@ function initMap() {
     infowindow.close(map);
   });
 
-  }
-
+}
+// initMap();
 window.initMap = initMap;
