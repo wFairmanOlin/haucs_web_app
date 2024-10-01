@@ -8,12 +8,35 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Experimental Chart Pond {{pond_id}}</h1>
-    <div class="combobox-container"></div>
+    <div class="pond_number">
+        <h1>Pond {{pond_id}}</h1>
+        <p>This is an experimental page for now.</p>
+    </div>
+
+    <div class="data_summary">
+        <table class="table">
+            <tbody>
+            <th scope="rowgroup"><h2>Data Summary</h2></th>
+            <tr>
+                <td>last sample</td>
+                <td><span id="lastDate"></span></td>
+            </tr>
+            <tr>
+                <td>dissolved oxygen</td>
+                <td><span id="lastDOMGL"></span> mg/l (<span id="lastDO"></span>%)</td>
+            </tr>
+            <tr>
+                <td>water temperature</td>
+                <td><span id="lastTemperature"></span> &degF</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="combobox-container">
         <label for="starDate" class="combobox-label">Start </label>
         <input type="datetime-local" id="startDate" name="start" onchange="handleDates()">
         <label for="endDate" class="combobox-label">End </label>
-        <input type="datetime-local" id="endDate" name="end">
+        <input type="datetime-local" id="endDate" name="end" onchange="handleDates()">
     </div>
     <div class="chartContainer">
         <canvas id="doChart"></canvas>
@@ -100,6 +123,14 @@
         var res = await fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end);
         var data = await res.json();
         data = await prep_data(data);
+        //handle data summary
+        const lastKey = Object.keys(data).at(-1)
+        let lastDate = luxon.DateTime.fromFormat(lastKey, "yyyyMMdd_HH:mm:ss", {"zone":"UTC"})
+        lastDate = lastDate.setZone("US/Central");
+        document.getElementById('lastDate').textContent=lastDate.toFormat("MM/dd hh:mm a ZZZZ");
+        document.getElementById('lastDOMGL').textContent= Math.round(data[lastKey]['do_mgl'], 1);
+        document.getElementById('lastDO').textContent=Math.round(data[lastKey]['do'],1);
+        document.getElementById('lastTemperature').textContent=Math.round(data[lastKey]['temp_f'],1);
         //prepare do data
         var do_buoy = [];
         var do_truck = [];

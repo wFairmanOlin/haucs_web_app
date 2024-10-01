@@ -11,6 +11,7 @@ body{
 
 @media screen and (max-height: 500px){
     .chartContainer{
+        padding-top: 15px;
         position: relative;
         margin: auto;
         height: 95vh;
@@ -19,6 +20,7 @@ body{
 }
 @media screen and (min-height: 501px){
     .chartContainer{
+        padding-top: 15px;
         position: relative;
         margin: auto;
         height: 50vh;
@@ -29,11 +31,14 @@ body{
 
 .tank_number h1, .pond_number h1{
     font-family: 'Bebas Neue';
-    font-size: 55px;
+    font-size: 45px;
     text-align: center;
     letter-spacing: 5px;
     margin-top: 1%;
-    text-decoration: underline;
+}
+
+.pond_number p{
+    text-align: center;
 }
 
 .data_summary {
@@ -44,25 +49,35 @@ body{
 
 .data_summary h1{
     font-family: 'Bebas Neue';
-    font-size: 45px;
+    font-size: 35px;
     letter-spacing: 2px;
     text-align: left;
     font-weight: 300;
 }
 
-.data_summary li{
+.data_summary td{
     margin-top: 1%;
-    font-size: 20px;
-    margin-left: 10px;
+    font-size: 18px;
+    text-align: left;
 }
 
-/* .data_summary div{
-    width: 250px;
-    padding: 10px;
-    background: white;
-    border-radius: 20px;
+.combobox-container {
+    position: relative;
+    margin-left: 3%;
+    margin-top: 1%;
     text-align: center;
-} */
+}
+
+.combobox-container label{
+    margin-top: 1%;
+    font-size: 15px;
+}
+.combobox-container input{
+    margin-top: 1%;
+    font-size: 15px;
+    margin-left: 5px;
+    margin-right: 10px;
+}
 
 .graph{
     position: relative;
