@@ -23,6 +23,7 @@
 <div class="chartContainer">
     <canvas id="temperatureChart"></canvas>
 </div>
+<p id="data"></p>
 
 
 
@@ -93,7 +94,7 @@
         };
 
         let hourFormat = 'MM/dd hh:mm a';
-        if (window.screen.height < 500)
+        if (window.screen.width < 500 || window.screen.height < 500)
             hourFormat = 'hh a';
 
         myChart = new Chart(id, {
@@ -207,6 +208,11 @@
     let doChart = new Chart('doChart');
     let temperatureChart = new Chart('temperatureChart');
     fetchAndDisplay();
+
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var x = document.getElementById("data");
+    x.innerHTML = "Browser width: " + w + ", height: " + h + ".";
   </script>
 
 {% endblock %}

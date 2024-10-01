@@ -9,20 +9,20 @@ body{
     background-image: none;
 }
 
-@media (max-height: 500px){
+@media screen and (max-height: 500px){
     .chartContainer{
         position: relative;
         margin: auto;
-        height: 100vh;
+        height: 95vh;
         width: 80vw;
     }
 }
-@media (min-height: 501px){
+@media screen and (min-height: 501px){
     .chartContainer{
         position: relative;
         margin: auto;
         height: 50vh;
-        width: 80vw;
+        width: 70vw;
     }
 }
 
