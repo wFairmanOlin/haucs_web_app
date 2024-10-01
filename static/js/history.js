@@ -25,9 +25,9 @@ function getStartTime(delta) {
     var start = new Date();
     start.setHours(start.getHours() - delta);
     let year = start.getUTCFullYear();
-    let month = start.getUTCMonth();
+    let month = start.getUTCMonth() + 1;
     if (month < 10)
-        month = "0" + (month + 1);
+        month = "0" + month;
     let day = start.getUTCDate();
     if (day < 10)
         day = "0" + day;
