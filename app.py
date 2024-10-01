@@ -85,6 +85,9 @@ def bmass():
 
     return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
+@app.route('/chart' + '<pond_id>')
+def chart(pond_id):
+    return render_template('chart.html',pond_id=pond_id)
 '''
 Data Source: call this from javascript to get fresh data
 '''
@@ -101,10 +104,19 @@ Data Source: call this from javascript to get fresh data in given time range
 @app.route('/dataTime/' + '<ref>', methods=['GET'])
 def dataTime(ref):
     variables = ref.split(' ')
-    db_path = "/".join(variables[:-2])
-    start = variables[-2]
-    end = variables[-1]
+    db_path = "/".join(variables[0:2])
+    start = variables[2]
+    end = variables[3]
     data = db.reference(db_path).order_by_key().start_at(start).end_at(end).get()
+    if len(variables) > 4:
+        sensor_type = variables[4]
+        filtered_data = {}
+        for i in data:
+            if data[i]['type'] == sensor_type:
+                filtered_data[i] = data[i]
+        print(filtered_data)
+        return jsonify(filtered_data)
+
     return jsonify(data)
 
 @app.route('/drone')
@@ -173,7 +185,7 @@ def history():
 
 @app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
-    days = 2
+    days = 8
     pondx = firebase.pond(pond_id, days)
     last_do = 0
     last_do_mgl = 0
