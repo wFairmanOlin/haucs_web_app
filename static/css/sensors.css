@@ -8,7 +8,7 @@
 body{
     background-image: none;
 }
-
+/* mobile */
 @media screen and (max-height: 500px){
     .chartContainer{
         padding-top: 15px;
@@ -20,10 +20,10 @@ body{
 }
 @media screen and (min-height: 501px){
     .chartContainer{
-        padding-top: 15px;
+        padding-bottom: 15px;
         position: relative;
         margin: auto;
-        height: 50vh;
+        height: 40vh;
         width: 70vw;
     }
 }
@@ -64,17 +64,17 @@ body{
 .combobox-container {
     position: relative;
     margin-left: 3%;
-    margin-top: 1%;
-    text-align: center;
+    /* margin-top: 1%; */
+    text-align: left;
 }
 
 .combobox-container label{
     margin-top: 1%;
-    font-size: 15px;
+    /* font-size: 15px; */
 }
 .combobox-container input{
     margin-top: 1%;
-    font-size: 15px;
+    /* font-size: 15px; */
     margin-left: 5px;
     margin-right: 10px;
 }
