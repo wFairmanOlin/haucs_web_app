@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="data_summary">
+    <div class="chart-container">
         <table class="table">
             <tbody>
-            <th scope="rowgroup"><h2>Pond {{pond_id}} Overview</h2></th>
+            <th scope="rowgroup" colspan="2"><h2>Pond {{pond_id}}</h2></th>
             <tr>
                 <td>last sample</td>
                 <td><span id="lastDate"></span></td>
@@ -24,14 +24,18 @@
                 <td>water temperature</td>
                 <td><span id="lastTemperature"></span> &degF</td>
             </tr>
+            <tr>
+                <td><label for="starDate" class="combobox-label">start date</label></td>
+                <td><input type="datetime-local" id="startDate" name="start" onchange="handleDates()"></td> 
+            </tr>
+            <tr>
+                <td><label for="endDate" class="combobox-label">end time</label></td>
+                <td><input type="datetime-local" id="endDate" name="end" onchange="handleDates()"></td>
+            </tr>
             </tbody>
         </table>
     </div>
     <div class="combobox-container">
-        <label for="starDate" class="combobox-label">Start </label>
-        <input type="datetime-local" id="startDate" name="start" onchange="handleDates()">
-        <label for="endDate" class="combobox-label">End </label>
-        <input type="datetime-local" id="endDate" name="end" onchange="handleDates()">
     </div>
     <div class="chartContainer">
         <canvas id="doChart"></canvas>
@@ -44,18 +48,17 @@
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@0.2.0"></script>
     <script src="{{ url_for('static', filename='js/helper.js') }}"></script>
-    <script>
-        function handleDates(){
-            let start = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Central"});
-            let end = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Central"});
-            start = start.setZone("UTC");
-            end = end.setZone("UTC");
-            const startString = start.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
-            const endString = end.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
-            fetchAndDisplay(startString, endString);
-        }
-    </script>
+ 
   <script>
+    function handleDates(){
+        let start = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Central"});
+        let end = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Central"});
+        start = start.setZone("UTC");
+        end = end.setZone("UTC");
+        const startString = start.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
+        const endString = end.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
+        fetchAndDisplay(startString, endString);
+    }
 
     function prep_data(data) {
         for (var key in data){
@@ -191,7 +194,7 @@
         temperatureChart = generate_graph(temperatureChart, data2, 'temperatureChart', 'Temperature (F)');
     };
     document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
-    document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * 5)).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
+    document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * 3)).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
     let doChart = new Chart('doChart');
     let temperatureChart = new Chart('temperatureChart');
     handleDates();
