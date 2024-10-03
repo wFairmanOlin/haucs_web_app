@@ -3,7 +3,7 @@
 {% block head %}
 
 <title>Chart</title>
-<link rel="stylesheet" href="static/css/sensors.css">
+<link rel="stylesheet" href="static/css/pond.css">
 
 {% endblock %}
 
@@ -11,7 +11,7 @@
     <div class="chart-container">
         <table class="table">
             <tbody>
-            <th scope="rowgroup" colspan="2"><h2>Pond {{pond_id}}</h2></th>
+            <th scope="rowgroup" colspan="2"><h2>Pond {{ pond_id }}</h2></th>
             <tr>
                 <td>last sample</td>
                 <td><span id="lastDate"></span></td>
@@ -34,8 +34,6 @@
             </tr>
             </tbody>
         </table>
-    </div>
-    <div class="combobox-container">
     </div>
     <div class="chartContainer">
         <canvas id="doChart"></canvas>
@@ -110,14 +108,20 @@
                         text:ylabel,
                       }
                     },
-                }
+                },
+                interaction: {
+                    mode: 'index',
+                    axis: 'x',
+                    intersect: false,
+                },
             },
         });
         return myChart;
     };
 
     async function fetchAndDisplay(start, end) {
-        const pondId = {{ pond_id }};
+        const pondId = "{{pond_id}}";
+        console.log(pondId);
         var res = await fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end);
         var data = await res.json();
         data = await prep_data(data);

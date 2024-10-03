@@ -185,7 +185,7 @@ def history():
 
 @app.route('/pond'+'<pond_id>')
 def show_pond(pond_id):
-    return render_template('chart.html',pond_id=pond_id)
+    return render_template('pond.html',pond_id=pond_id)
 
 @app.route('/recent')
 def recent():
@@ -204,7 +204,6 @@ def show_sensor(sensor_id):
 
 @app.route('/weather')
 def show_weather():
-    weather.generate_weather(2)
     return render_template('weather.html')
 
 
