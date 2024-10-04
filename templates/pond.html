@@ -110,11 +110,34 @@
                     },
                 },
                 interaction: {
-                    mode: 'index',
+                    mode: 'nearest',
                     axis: 'x',
                     intersect: false,
                 },
+                elements: {
+                    point: {
+                        // pointRadius: 1,
+                        pointHoverRadius: 7,
+                    }
+                },  
             },
+            plugins: [{
+                afterDraw: chart => {
+                if (chart.tooltip?._active?.length) {
+                    let x = chart.tooltip._active[0].element.x;
+                    let yAxis = chart.scales.y;
+                    let ctx = chart.ctx;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x, yAxis.top);
+                    ctx.lineTo(x, yAxis.bottom);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'rgba(100, 100, 100, 0.4)';
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                }
+          }],
         });
         return myChart;
     };
