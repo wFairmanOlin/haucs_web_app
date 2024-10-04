@@ -83,8 +83,9 @@ canvas {
 .combobox-container {
     display: flex;
     align-items: center;
-    margin-left: 3%; /* Same margin as .data_summary */
+    margin-left: 10px; /* Same margin as .data_summary */
     margin-bottom: 5px;
+    margin-right: 10px
 }
 
 /* Styling the label */
@@ -153,7 +154,7 @@ canvas {
 
 .table {
     width: 100%; /* Full width of its container */
-    text-align: left;
+    text-align: left;  
 }
 
 /* Responsive behaviors */
@@ -172,7 +173,7 @@ canvas {
 
 /* Styles for the dynamic table */
 .data-table-container {
-    margin: 20px;
+    margin: 10px;
     background-color: #ffffff;
     border-radius: 5px; /* Optional: adds rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
@@ -188,6 +189,12 @@ canvas {
     padding: 4px;
     text-align: center;
     transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+@media (max-width: 600px) {
+    .data-table {
+        font-size: 3vw;
+    }
 }
 
 .data-table th {

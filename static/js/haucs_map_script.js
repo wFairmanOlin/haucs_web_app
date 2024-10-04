@@ -7,8 +7,8 @@ async function initMap() {
 
   map = new Map(document.getElementById('map'), 
   {
-    zoom: 16,
-    center: { lat: 37.7037823, lng: -89.4648105 },
+    zoom: 15,
+    center: { lat: 37.705, lng: -89.458 },
     // tilt:45,
     mapTypeId: 'satellite',
     // rotateControl: true,

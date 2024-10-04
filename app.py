@@ -71,7 +71,13 @@ def update_overview():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    # return render_template('home.html')
+    last_do = db.reference('LH_Farm/overview').get()
+
+    with open('static/json/farm_features.json', 'r') as file:
+        data = file.read()
+        
+    return render_template('haucs_map.html', data=data, do_values=json.dumps(last_do))
 
 @app.route('/about')
 def about():
@@ -163,10 +169,18 @@ def feedback():
                 db.reference("/LH_Farm/" + pond_id + "/" + msg_time + "/").set(data)
             except:
                 print("cannot  convert")
+        elif request.values.get('consent'):
+            name = request.values.get('f_name') + " " + request.values.get('l_name')
+            consent = request.values.get('consent')
+            number = request.values.get('number')
+            statement = f"User {name} chose to {consent} the number {number} to/from the automated SMS service"
+            db.reference('/LH_Farm/comments/' + msg_time + '/').set(statement)
+        else:
+            print(request.values)
             
     return render_template('feedback.html')
 
-@app.route('/HAUCS')
+@app.route('/haucs_map')
 def haucs():
      
     last_do = db.reference('LH_Farm/overview').get()
@@ -174,7 +188,7 @@ def haucs():
     with open('static/json/farm_features.json', 'r') as file:
         data = file.read()
         
-    return render_template('HAUCS.html', data=data, do_values=json.dumps(last_do))
+    return render_template('haucs_map.html', data=data, do_values=json.dumps(last_do))
 
 @app.route('/history')
 def history():

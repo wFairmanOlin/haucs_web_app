@@ -9,28 +9,31 @@
     const do_HAUCS = JSON.parse({{ do_values|tojson}});
   </script>
 
-  <base href=".">
+  <!-- <base href="."> -->
   <title>HAUCS Map</title>
   <link rel="stylesheet" type="text/css" href="static/css/map_style.css" />
-  <link rel="stylesheet" type="text/css" href="static/css/analytics.css" />
-  <script src="{{ url_for('static', filename='js/HAUCS_script.js') }}"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="static/css/analytics.css" />   -->
+  <script src="{{ url_for('static', filename='js/haucs_map_script.js') }}"></script>
 
 {% endblock %}
 
 {% block body %}
 
-<section class="content">
+<!-- <section class="content">
     <p>Click on a pond to see data:</p>
     
-</section>
+</section> -->
 
-<div id="map_container">
+<!-- <div id="map_container">
   <div id="map"></div>
-</div>
+</div> -->
+<body>
+  <div id="map"></div>
+</body>
 
 
 
-<div class="legend">
+<!-- <div class="legend">
   <h3>Legend:</h3>
   <ul>
 
@@ -52,7 +55,7 @@
     </li>
     <li><img src="/static/images/aerator_on.svg" alt=""> Aerator status on</li>
     <li><img src="/static/images/aerator_off.svg" alt=""> Aerator status off</li>
-</div>
+</div> -->
 
 <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQZZk_BUDTJwYN2TCsPwVJGLxkiMiSzPg&loading=async&callback=initMap&v=beta&libraries=marker"
