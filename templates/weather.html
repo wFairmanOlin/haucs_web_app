@@ -35,7 +35,7 @@
         <tr>
           <td><label for="dataType">feature</label></td>
           <td>
-            <select id="dataType" onchange="update_chart()">
+            <select id="dataType" onchange="update_feature()">
               <option value="temp" selected>temperature</option>
               <option value="baro">pressure</option>
               <option value="rh">humidity</option>
@@ -225,13 +225,19 @@
 
   async function update_chart(){
     const dataType = await document.getElementById('dataType').value;
-    let data = await get_data();
-    graph1 = generate_graph(graph1, 'graph1', data['time'], data[dataType]);
+    globalData = await get_data();
+    graph1 = generate_graph(graph1, 'graph1', globalData['time'], globalData[dataType]);
+  }
+
+  function update_feature(){
+    const dataType = document.getElementById('dataType').value;
+    graph1 = generate_graph(graph1, 'graph1', globalData['time'], globalData[dataType]);
   }
 
   document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
   document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * 3)).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
   update_weather();
+  let globalData = {};
   let graph1 = new Chart('graph1');
   update_chart();
 </script>

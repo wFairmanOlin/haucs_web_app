@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<title>Chart</title>
+<title>Pond {{ pond_id }}</title>
 <link rel="stylesheet" href="static/css/pond.css">
 
 {% endblock %}
@@ -32,6 +32,10 @@
                 <td><label for="endDate" class="combobox-label">end time</label></td>
                 <td><input type="datetime-local" id="endDate" name="end" onchange="handleDates()"></td>
             </tr>
+            <tr>
+                <td><label class="combobox-label">go to pond</label></td>
+                <td><input type="text" id="goToPond" onchange="handlePondChange()" size="5"></td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -56,6 +60,11 @@
         const startString = start.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
         const endString = end.toFormat("yyyyMMdd_HH:mm:ss", {"zone":"UTC"});
         fetchAndDisplay(startString, endString);
+    }
+
+    function handlePondChange(){
+        const newPondId = document.getElementById('goToPond').value;
+        window.location.replace("/pond" + newPondId);
     }
 
     function prep_data(data) {

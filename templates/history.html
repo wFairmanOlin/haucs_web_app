@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="static/css/history.css">
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
 <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+<script src="{{ url_for('static', filename='js/helper.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -70,8 +71,8 @@
             const selectedPondId = pondSelector.value;
             //SET TIMESPAN
             const timePeriod = document.getElementById('timePeriod').value;
-            let start = getStartTime(timePeriod);
-            let end = getStartTime(0);
+            let start = get_start_time(timePeriod);
+            let end = get_start_time(0);
             const fetchPromises = jsonData.features.map(feature => {
                 const pondId = feature.properties.number;
                 if (feature.properties.number == ('bathymetry')){
