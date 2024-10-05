@@ -11,12 +11,13 @@ fb_key = os.getenv('fb_key')
 if fb_key:
     deployed = True
     global fb_app
-    fb_app = firebase.login(fb_key)
+    
 else:
     deployed = False
     with open('fb_key.json', 'r') as file:
         fb_key = file.read()
-
+        
+fb_app = firebase.login(fb_key)
 cred = db.reference('LH_Farm/email/credentials').get()
 
 ########## FUNCTIONS ################
@@ -108,7 +109,7 @@ def check_ponds():
         data = json.load(file)
 
     pids = [str(i['properties']['number']) for i in data['features']]
-    overview = dict()
+    overview = db.reference("LH_Farm/overview").get()
     curr_time = datetime.now(timezone.utc)
     day_delay = (curr_time - timedelta(days=1)).strftime('%Y%m%d_%H:%M:%S')
     hour_delay = (curr_time - timedelta(hours=1)).strftime('%Y%m%d_%H:%M:%S')
@@ -119,10 +120,11 @@ def check_ponds():
         #update overview
         pdata = db.reference('LH_Farm/pond_' + pid).order_by_key().start_at(day_delay).limit_to_last(1).get()
         pref = 'pond_' + pid
-        overview[pref] = {'last_do':-1,
-                            'last_do_mgl':-1,
-                            'last_notification':0,
-                            'mute':0}
+        if pref not in overview:
+            overview[pref] = {'last_do':-1,
+                                'last_do_mgl':-1,
+                                'last_notification':0,
+                                'mute':0}
         if pdata:
             i = list(pdata)[0]
             do = np.array(pdata[i]['do']).astype('float')
