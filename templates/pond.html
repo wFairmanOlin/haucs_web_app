@@ -17,6 +17,11 @@
                 <td><span id="lastDate"></span></td>
             </tr>
             <tr>
+                <td>from sensor</td>
+                <td><span id="lastSensor"></span></td>
+            </tr>
+            <tr>
+            <tr>
                 <td>dissolved oxygen</td>
                 <td><span id="lastDOMGL"></span> mg/l (<span id="lastDO"></span>%)</td>
             </tr>
@@ -151,20 +156,28 @@
         return myChart;
     };
 
-    async function fetchAndDisplay(start, end) {
+    async function fetchMostRecent() {
         const pondId = "{{pond_id}}";
-        console.log(pondId);
-        var res = await fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end);
+        const start = luxon.DateTime.now().minus(1000 * 60 * 60 * 24).setZone("UTC").toFormat("yyyyMMdd_HH:mm:ss");
+        const end = luxon.DateTime.now().setZone("UTC").toFormat("yyyyMMdd_HH:mm:ss");
+        var res = await fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end + ' ' + 1);
         var data = await res.json();
         data = await prep_data(data);
-        //handle data summary
+        console.log(data);
         const lastKey = Object.keys(data).at(-1)
-        let lastDate = luxon.DateTime.fromFormat(lastKey, "yyyyMMdd_HH:mm:ss", {"zone":"UTC"})
-        lastDate = lastDate.setZone("US/Central");
+        const lastDate = luxon.DateTime.fromFormat(lastKey, "yyyyMMdd_HH:mm:ss", {"zone":"UTC"}).setZone("US/Central");
         document.getElementById('lastDate').textContent=lastDate.toFormat("MM/dd hh:mm a ZZZZ");
         document.getElementById('lastDOMGL').textContent= Math.round(data[lastKey]['do_mgl'], 1);
         document.getElementById('lastDO').textContent=Math.round(data[lastKey]['do'],1);
         document.getElementById('lastTemperature').textContent=Math.round(data[lastKey]['temp_f'],1);
+        document.getElementById('lastSensor').textContent= data[lastKey]['type'] + " " + data[lastKey]['sid'];
+    }
+
+    async function fetchAndDisplay(start, end) {
+        const pondId = "{{pond_id}}";
+        var res = await fetch('/dataTime/LH_Farm pond_' + pondId + ' ' + start + ' ' + end);
+        var data = await res.json();
+        data = await prep_data(data);
         //prepare do data
         var do_buoy = [];
         var do_truck = [];
@@ -234,6 +247,7 @@
     let doChart = new Chart('doChart');
     let temperatureChart = new Chart('temperatureChart');
     handleDates();
+    fetchMostRecent();
   </script>
 
 {% endblock %}

@@ -16,7 +16,7 @@ else:
     deployed = False
     with open('fb_key.json', 'r') as file:
         fb_key = file.read()
-        
+
 fb_app = firebase.login(fb_key)
 cred = db.reference('LH_Farm/email/credentials').get()
 
@@ -140,7 +140,7 @@ def check_ponds():
             overview[pref]['last_do_mgl'] = convert_to_mgl(overview[pref]['last_do'], t.mean(), init_p)
             #notifications
             #only test data within past hour from buoys
-            if (i > hour_delay) or (pdata[i]['type'] == 'buoy'):
+            if (i > hour_delay) and (pdata[i]['type'] == 'buoy'):
                 #only send if not muted
                 if not overview[pref].get('mute'):
                     #only send if below alert and saturation is valid

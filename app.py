@@ -115,13 +115,10 @@ def dataTime(ref):
     end = variables[3]
     data = db.reference(db_path).order_by_key().start_at(start).end_at(end).get()
     if len(variables) > 4:
-        sensor_type = variables[4]
-        filtered_data = {}
-        for i in data:
-            if data[i]['type'] == sensor_type:
-                filtered_data[i] = data[i]
-        print(filtered_data)
-        return jsonify(filtered_data)
+        n = int(variables[4])
+        data = db.reference(db_path).order_by_key().start_at(start).end_at(end).limit_to_last(n).get()
+    else:
+        data = db.reference(db_path).order_by_key().start_at(start).end_at(end).get()
 
     return jsonify(data)
 
