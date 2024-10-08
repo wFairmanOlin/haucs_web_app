@@ -189,7 +189,7 @@ def haucs():
 
 @app.route('/hboi')
 def hboi():
-    return render_template('weather.html', sensor="hboi_aqua_1", ts=1)
+    return render_template('weather_hboi.html', sensor="hboi_aqua_1", ts=1)
 
 @app.route('/history')
 def history():
