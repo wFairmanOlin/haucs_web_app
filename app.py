@@ -2,11 +2,11 @@ from flask import Flask, render_template, jsonify, request
 # from flask_apscheduler import APScheduler
 from datetime import datetime, timedelta, timezone
 import firebase
-import json
-import os
+import os, smtplib, json
 from firebase_admin import db
 import numpy as np
-import weather
+from email.message import EmailMessage
+import pytz
 
 #create folder structure
 if not os.path.exists('static/graphs'):
@@ -91,9 +91,6 @@ def bmass():
 
     return render_template('biomass.html', data=data,battv=json.dumps(last_battv))
 
-@app.route('/chart' + '<pond_id>')
-def chart(pond_id):
-    return render_template('chart.html',pond_id=pond_id)
 '''
 Data Source: call this from javascript to get fresh data
 '''
@@ -216,6 +213,33 @@ def show_sensor(sensor_id):
     str_time = last_dt.strftime('%I:%M %p')
     bmx.plot_timeseries(mv=10)
     return render_template('tanks_analytics.html', sensor_id=sensor_id, last_date=str_date, last_time = str_time, last_battv=last_battv, last_dt=last_dt)
+
+@app.route("/sms", methods=['GET', 'POST'])
+def sms_reply():
+    body = request.values.get('Body', None)
+    print(request.values)
+    cred = db.reference('LH_Farm/email/credentials').get()
+    recipients = ["wfairman@fau.edu"]
+    
+    msg = EmailMessage()
+    msg['Subject'] = "SMS RESPONSE"
+    msg['From'] = cred['from']
+    msg['To'] = ', '.join(recipients)
+
+    content = f"{datetime.now(pytz.timezone('US/Central')).strftime('%I:%M %p')} CT\n"
+    content += body
+    msg.set_content(content)
+
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(cred['user'], cred['pwd'])
+        server.send_message(msg)
+        server.close()
+    except:
+        print("failed to send email")
+    
+    return str(request.values)
 
 @app.route('/weather')
 def show_weather():

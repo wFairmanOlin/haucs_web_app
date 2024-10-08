@@ -79,19 +79,19 @@
     var idx = data.result.length - 1;
     if (idx >= 0){
       let temp = Math.round(32 + (9 / 5 * data.result[idx].readings[7]));
-      let wind_spd = data.result[idx].readings[5];
+      let wind_spd = data.result[idx].readings[3];
       let wind_dir = data.result[idx].readings[2];
       document.getElementById('lastWindDir').textContent = wind_dir;
       document.getElementById('lastWindSpd').textContent = wind_spd;
       document.getElementById('lastTemp').textContent = temp;
       let lastDate = luxon.DateTime.fromMillis(data.result[idx].time)
-      lastDate = lastDate.setZone("US/Central");
+      lastDate = lastDate.setZone("US/Eastern");
       document.getElementById('lastDate').textContent=lastDate.toFormat("MM/dd hh:mm a ZZZZ");
     }
   }
   async function get_water_level(gData){
-    let startDate = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Central"});
-    let endDate = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Central"});
+    let startDate = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Eastern"});
+    let endDate = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Eastern"});
     endDate = endDate.toMillis();
     startDate = startDate.toMillis();
     var res = await fetch('https://api.sensestream.org/observations/measurements/' + 'hboi_2' + '/port0?start=' 
@@ -107,8 +107,8 @@
   }
 
   async function get_data(){
-    let startDate = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Central"});
-    let endDate = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Central"});
+    let startDate = luxon.DateTime.fromISO(document.getElementById('startDate').value, {"zone":"US/Eastern"});
+    let endDate = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Eastern"});
     endDate = endDate.toMillis();
     startDate = startDate.toMillis();
     var res = await fetch('https://api.sensestream.org/observations/measurements/' + '{{sensor}}' + '/0?start=' 
@@ -176,7 +176,7 @@
                     },
                     adapters:{
                         date: {
-                            zone:"US/Central",
+                            zone:"US/Eastern",
                         }
                     }
                 },
@@ -242,8 +242,8 @@
     }
   }
 
-  document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
-  document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * {{ts}})).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
+  document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Eastern'});
+  document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * {{ts}})).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Eastern'});
   update_weather();
   let globalData = {};
   let graph1 = new Chart('graph1');
