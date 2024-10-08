@@ -67,32 +67,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@0.2.0"></script>
 <script src="{{ url_for('static', filename='js/helper.js') }}"></script>
 <script>
-  function updateWeather(){
-    var d = new Date();
-    var milli = d.getTime();
-    fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' 
-          + (milli - 6*100000) + '&end=' + milli)
-      .then(response => response.json())
-      .then(json => {
-      if (json) {
-        var idx = json.result.length - 1;
-        if (idx >= 0){
-          temp = Math.round(32 + (9 / 5 * json.result[idx].readings[7]));
-          wind_spd = json.result[idx].readings[5];
-          wind_dir = json.result[idx].readings[2];
-          document.getElementById('wind_dir').textContent = wind_dir;
-          document.getElementById('wind_spd').textContent = wind_spd;
-          document.getElementById('temp').textContent = temp;
-        }
-      }
-    })
-  }
   async function update_weather(){
     let startDate = luxon.DateTime.now().minus(1000 * 600);
     let endDate = luxon.DateTime.now();
     endDate = endDate.toMillis();
     startDate = startDate.toMillis();
-    var res = await fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' 
+    var res = await fetch('https://api.sensestream.org/observations/measurements/' + '{{sensor}}' + '/0?start=' 
     +startDate + '&end=' + endDate);
     var data = await res.json();
     var idx = data.result.length - 1;
@@ -114,7 +94,7 @@
     let endDate = luxon.DateTime.fromISO(document.getElementById('endDate').value, {"zone":"US/Central"});
     endDate = endDate.toMillis();
     startDate = startDate.toMillis();
-    var res = await fetch('https://api.sensestream.org/observations/measurements/hboi_aqua_2/0?start=' 
+    var res = await fetch('https://api.sensestream.org/observations/measurements/' + '{{sensor}}' + '/0?start=' 
     +startDate + '&end=' + endDate);
     var data = await res.json();
     let ret = {'time': {'label':'time','data':[]},
@@ -235,7 +215,7 @@
   }
 
   document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
-  document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * 3)).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
+  document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * {{ts}})).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
   update_weather();
   let globalData = {};
   let graph1 = new Chart('graph1');

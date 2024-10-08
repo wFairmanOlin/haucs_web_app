@@ -187,6 +187,10 @@ def haucs():
         
     return render_template('haucs_map.html', data=data, do_values=json.dumps(last_do))
 
+@app.route('/hboi')
+def hboi():
+    return render_template('weather.html', sensor="hboi_aqua_1", ts=1)
+
 @app.route('/history')
 def history():
     with open('static/json/farm_features.json', 'r') as file:
@@ -215,7 +219,7 @@ def show_sensor(sensor_id):
 
 @app.route('/weather')
 def show_weather():
-    return render_template('weather.html')
+    return render_template('weather.html', sensor="hboi_aqua_2", ts=3)
 
 
 if __name__ == "__main__":
