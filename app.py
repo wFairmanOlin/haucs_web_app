@@ -217,6 +217,7 @@ def show_sensor(sensor_id):
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
     body = request.values.get('Body', None)
+    responseFrom = request.values.get('From', None)
     print(request.values)
     cred = db.reference('LH_Farm/email/credentials').get()
     recipients = ["wfairman@fau.edu"]
@@ -227,6 +228,7 @@ def sms_reply():
     msg['To'] = ', '.join(recipients)
 
     content = f"{datetime.now(pytz.timezone('US/Central')).strftime('%I:%M %p')} CT\n"
+    content += f"message from {responseFrom}\n"
     content += body
     msg.set_content(content)
 

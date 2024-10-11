@@ -5,6 +5,7 @@ from firebase_admin import db
 import numpy as np
 from email.message import EmailMessage
 import pytz
+from twilio.rest import Client
 
 fb_key = os.getenv('fb_key')
 
@@ -18,7 +19,6 @@ else:
         fb_key = file.read()
 
 fb_app = firebase.login(fb_key)
-cred = db.reference('LH_Farm/email/credentials').get()
 
 ########## FUNCTIONS ################
 def convert_to_mgl(do, t, p, s=0):
@@ -49,7 +49,7 @@ def convert_to_mgl(do, t, p, s=0):
     return DO_mgl
 
 def send_email(subject, body, recipient_list, pond_id=""):
-
+    cred = db.reference('LH_Farm/email/credentials').get()
     recipients = db.reference('LH_Farm/email/' +  recipient_list).get()
     recipients = [i for i in recipients if i != None]
     
@@ -73,6 +73,20 @@ def send_email(subject, body, recipient_list, pond_id=""):
         server.close()
     except:
         print("failed to send email")
+
+def send_sms(body, recipient_list):
+
+    cred = db.reference('LH_Farm/email/sms_credentials').get()
+    client = Client(cred['sid'], cred['token'])
+    recipients = db.reference('LH_Farm/email/' +  recipient_list).get()
+    recipients = [i for i in recipients if i != None]
+
+    for recipient in recipients:
+        message = client.messages.create(
+            body=body,
+            from_="+18333627068",
+            to=recipient,
+        )
 
 def check_trucks():
     do_send = False
@@ -151,6 +165,7 @@ def check_ponds():
                             contents = f"DO measured at {round(overview[pref]['last_do_mgl'], 2)}mg/l({round(overview[pref]['last_do'])}%)\nNABuoy {pdata[i]['sid']}"
                             print(contents, pid)
                             send_email(f"LOW DO POND {pid}", contents, recipient_list, pid)
+                            send_sms(f"LOW DO POND {pid}\n" + contents, "real_time_sms_notifications")
     db.reference("LH_Farm/overview").set(overview)
 
 check_trucks()
