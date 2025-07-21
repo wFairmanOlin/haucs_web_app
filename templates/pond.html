@@ -170,7 +170,7 @@
         document.getElementById('lastDOMGL').textContent= Math.round(data[lastKey]['do_mgl'], 1);
         document.getElementById('lastDO').textContent=Math.round(data[lastKey]['do'],1);
         document.getElementById('lastTemperature').textContent=Math.round(data[lastKey]['temp_f'],1);
-        document.getElementById('lastSensor').textContent= data[lastKey]['type'] + " " + data[lastKey]['sid'];
+        document.getElementById('lastSensor').textContent= data[lastKey]['type'] + " " + data[lastKey]['sid'].slice(-6,);
     }
 
     async function fetchAndDisplay(start, end) {
@@ -181,6 +181,7 @@
         //prepare do data
         var do_buoy = [];
         var do_truck = [];
+        var do_aquasense = [];
         for (const key in data){
             const dp = {'x':data[key]['time_ms'].ts, 'y':data[key]['do_mgl']}
             if (data[key]['type'] == "buoy"){
@@ -189,10 +190,14 @@
             else if (data[key]['type'] == "truck"){
                 do_truck.push(dp);
             }
+            else if (data[key]['type'].slice(0,6) == "a_buoy"){
+                do_aquasense.push(dp);
+            }
         }
         //prepare temp _data
         var temp_buoy = [];
         var temp_truck = [];
+        var temp_aquasense = [];
         for (const key in data){
             const dp = {'x':data[key]['time_ms'].ts, 'y':data[key]['temp_f']}
             if (data[key]['type'] == "buoy"){
@@ -200,6 +205,9 @@
             }
             else if (data[key]['type'] == "truck"){
                 temp_truck.push(dp);
+            }
+            else if (data[key]['type'].slice(0,6) == "a_buoy"){
+                temp_aquasense.push(dp);
             }
         }
 
@@ -218,7 +226,14 @@
                 backgroundColor: 'rgba(1, 120, 255, 0.5)',
                 data: do_truck,
                 label:"truck"
-                }
+                },
+                {
+                type: 'scatter',
+                borderColor: 'rgba(80, 200, 80, 1)',
+                backgroundColor: 'rgba(80, 200, 80, 0.5)',
+                data: do_aquasense,
+                label:"aquas"
+                },
             ],
         };
         const data2 = {
@@ -234,14 +249,24 @@
                 type: 'scatter',
                 borderColor: 'rgba(1, 120, 255, 1)',
                 backgroundColor: 'rgba(1, 120, 255, 0.5)',
-                data: temp_truck,
+                data: do_truck,
                 label:"truck"
-                }
+                },
+                {
+                type: 'scatter',
+                borderColor: 'rgba(80, 200, 80, 1)',
+                backgroundColor: 'rgba(80, 200, 80, 0.5)',
+                data: temp_aquasense,
+                label:"aquas"
+                },
             ],
         };
+
         doChart = generate_graph(doChart, data1, 'doChart', 'DO (mg/l)');
         temperatureChart = generate_graph(temperatureChart, data2, 'temperatureChart', 'Temperature (F)');
+
     };
+
     document.getElementById('endDate').value= luxon.DateTime.now().toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
     document.getElementById('startDate').value= (luxon.DateTime.now().minus(1000 * 60 * 60 * 24 * 3)).toFormat("yyyy-MM-dd'T'HH:mm", {'zone':'US/Central'});
     let doChart = new Chart('doChart');
