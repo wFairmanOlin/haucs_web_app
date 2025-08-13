@@ -187,7 +187,7 @@
             if (data[key]['type'] == "buoy"){
                 do_buoy.push(dp);
             }
-            else if (data[key]['type'] == "truck"){
+            else if (data[key]['type'] == "rpi_truck"){
                 do_truck.push(dp);
             }
             else if (data[key]['type'].slice(0,6) == "a_buoy"){
@@ -203,7 +203,7 @@
             if (data[key]['type'] == "buoy"){
                 temp_buoy.push(dp);
             }
-            else if (data[key]['type'] == "truck"){
+            else if (data[key]['type'] == "rpi_truck"){
                 temp_truck.push(dp);
             }
             else if (data[key]['type'].slice(0,6) == "a_buoy"){
@@ -249,7 +249,7 @@
                 type: 'scatter',
                 borderColor: 'rgba(1, 120, 255, 1)',
                 backgroundColor: 'rgba(1, 120, 255, 0.5)',
-                data: do_truck,
+                data: temp_truck,
                 label:"truck"
                 },
                 {
